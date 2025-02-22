@@ -11,6 +11,7 @@ export default function Home() {
   return (
    <div>
     <Button onClick={incrementHandler}>Click me {curr}</Button>
+  
    </div>
   );
 }
