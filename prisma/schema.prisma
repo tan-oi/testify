@@ -30,47 +30,58 @@ model Space {
   name String 
   userId String
   slug String @unique
-
-
-  
-
-
-
+  logo String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-
   testimonials Testimonials[]
-  questions Questions[]
+ 
+  spaceCustomization SpaceCustomization?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   
+
 }
 
-model Questions {
-  id String @id @default(cuid())
-  label String
 
-  spaceId String
+
+
+model SpaceCustomization {
+  id String @id @default(uuid())
+  spaceId String @unique
+
+    spaceHeader String
+    spaceCustomMessage String
+    spaceQuestions String[]
+    spaceCollectionAllowed ContentType
+
+    spaceTheme Theme @default(DARK)
+    spaceStarRatings Boolean @default(true)
+
+    spaceThankYouHeader String
+    spaceThankYouDescription String
+
+    
+
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-}
 
+}
 model Testimonials {
   id String @id @default(cuid())
-  type TestimonialType @default(TEXT)
+  type ContentType @default(TEXT)
   source TestimonialSource @default(MANUAL)
-  senderName String?
-  senderEmail String?
+  senderName String
+  senderEmail String
 
   content String?
-  rating Int @default(5)
+  rating Int? @default(5)
   videoUrl String?
+
+  consentDisplay Boolean @default(true)
 
   spaceId String
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
-  isPublished Boolean @default(false)
+  // isPublished Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -115,7 +126,7 @@ model VerificationToken {
 }
  
 
-enum TestimonialType {
+enum ContentType {
   TEXT
   VIDEO
 }
@@ -123,4 +134,9 @@ enum TestimonialType {
 enum TestimonialSource {
   IMPORT 
   MANUAL
+}
+
+enum Theme {
+  DARK
+  LIGHT
 }
