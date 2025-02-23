@@ -29,15 +29,51 @@ model Space {
   id String @id @default(cuid())
   name String 
   userId String
+  slug String @unique
+
+
   
+
+
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+
+  testimonials Testimonials[]
+  questions Questions[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   
+}
+
+model Questions {
+  id String @id @default(cuid())
+  label String
+
+  spaceId String
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+}
+
+model Testimonials {
+  id String @id @default(cuid())
+  type TestimonialType @default(TEXT)
+  source TestimonialSource @default(MANUAL)
+  senderName String?
+  senderEmail String?
+
+  content String?
+  rating Int @default(5)
+  videoUrl String?
+
+  spaceId String
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  isPublished Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 model Account {
   userId            String
@@ -78,3 +114,13 @@ model VerificationToken {
   @@id([identifier, token])
 }
  
+
+enum TestimonialType {
+  TEXT
+  VIDEO
+}
+
+enum TestimonialSource {
+  IMPORT 
+  MANUAL
+}
