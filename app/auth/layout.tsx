@@ -6,7 +6,7 @@ export default function AuthLayout({
     return (
       <html lang="en" suppressHydrationWarning>
         <body
-          className={``}
+          className="min-h-screen" suppressHydrationWarning
         >
           {children}
         </body>

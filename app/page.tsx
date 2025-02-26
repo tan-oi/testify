@@ -1,17 +1,23 @@
-"use client"
 
+import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 
-export default function Home() {
-  const [curr, setCurr] = useState(0);
-  const incrementHandler = () => {
-    setCurr(v => v+1);
-  }
+
+export default async function Home() {
+
+  const session = await auth();
+  console.log(session)
   return (
    <div>
-    <Button onClick={incrementHandler}>Click me {curr}</Button>
-  
+    <form action={async ()=>{
+      "use server"
+      await signOut();
+    }}>
+
+    <Button type="submit">
+      logout
+    </Button>
+    </form>
    </div>
   );
 }

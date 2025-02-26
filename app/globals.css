@@ -16,7 +16,7 @@ body {
     --popover-foreground: 229 63% 3%;
     --card: 0 0% 99%;
     --card-foreground: 229 63% 3%;
-    --border: 220 13% 91%;
+    --border: 221 13% 91%;
     --input: 220 13% 91%;
     --primary: 229 100% 62%;
     --primary-foreground: 0 0% 100%;
@@ -30,6 +30,8 @@ body {
     --chart-1: 229 100% 62%;
     --chart-2: 229 20% 90%;
     --chart-3: 229 28% 85%;
+    
+    
     --chart-4: 229 20% 93%;
     --chart-5: 229 103% 62%;
     --radius: 0.5rem;
@@ -63,7 +65,6 @@ body {
   }
 }
 
-
 @layer base {
   * {
     @apply border-border;
@@ -73,10 +74,6 @@ body {
   }
 }
 
-
-
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -85,4 +82,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
