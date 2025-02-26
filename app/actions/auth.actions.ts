@@ -6,7 +6,7 @@ import { FormCredTypes } from "@/lib/types";
 import bcrypt from "bcryptjs";
 
 export async function googleAuthSubmit() {
-  await signIn("google", { redirectTo: "/" });
+  await signIn("google", { redirectTo: "/dashboard" });
   return { success: "true" };
 }
 
@@ -39,6 +39,7 @@ export async function handleCredentials({
         },
       });
     } catch (err) {
+      console.log(err);
       return {
         success: false,
         message: "internal server error,please try again",

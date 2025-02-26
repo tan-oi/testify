@@ -1,10 +1,15 @@
+
+import { auth } from "@/auth";
 import { AuthForm } from "@/components/auth-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { redirect } from "next/navigation";
 
-export default function AuthPage() {
+export default async function AuthPage() {
+  const session = await auth();
+  if(session) redirect("/dashboard");
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-2">
+      <div className="flex flex-col items-center justify-center mt-16 space-y-2">
         <Tabs defaultValue="signup" className="w-[350px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signup">Signup</TabsTrigger>
