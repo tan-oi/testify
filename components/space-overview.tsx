@@ -10,15 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
+import { useSpaceModalStore } from "@/lib/store/spaceStore";
 
 export function SpaceOverview() {
+  const { openModal } = useSpaceModalStore();
   return (
     <>
       <div className="flex flex-col space-y-8">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl text-foreground font-semibold">Spaces</h2>
 
-          <Button className=""> Create a new space </Button>
+          <Button className="" onClick={() => openModal("create")}> Create a new space </Button>
         </div>
         <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
