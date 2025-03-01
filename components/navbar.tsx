@@ -18,7 +18,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full">
       <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
-      <div className="relative bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 max-w-4xl mx-auto">
+      <div className="relative bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 mx-auto">
         <div className="container flex h-16  px-4 items-center">
           <div className="flex flex-1 items-center justify-between">
             <Link href="/" className="flex items-center space-x-3 hover:cursor-pointer group">
