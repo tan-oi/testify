@@ -35,36 +35,34 @@ import { useSpaceModalStore } from "@/lib/store/spaceStore";
 import { BasicDetails } from "./space-form/basic/basic-details";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { ThankYouDetails } from "./space-form/thankyou/thankyou-details";
+import { Customize } from "./space-form/customizations/customize";
 
 export function GlobalModal() {
-  const { isOpen, type, formData, updateFormData, closeModal } =
+  const { isOpen, type, formData, updateFormData, closeModal,currentStep,nextStep,prevStep,jumpStep } =
     useSpaceModalStore();
 
-  const [steps, setSteps] = useState(1);
 
-  
   const stepperData = [
     {
-        stepDetails : {
-            "number" : 1,
-            "content" : "Basic Details"
-        }
-        
+      stepDetails: {
+        number: 0,
+        content: "Basic Details",
+      },
     },
     {
-        stepDetails : {
-            "number" : 2,
-            "content" : "Thank you note"
-        }
-        
-    },{
-        stepDetails : {
-            "number" : 3,
-            "content" : "Customizations"
-        }
-        
-    }
-  ]
+      stepDetails: {
+        number: 1,
+        content: "Thank you note",
+      },
+    },
+    {
+      stepDetails: {
+        number: 2,
+        content: "Customizations",
+      },
+    },
+  ];
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     updateFormData({ [name]: type === "checkbox" ? checked : value });
@@ -72,7 +70,7 @@ export function GlobalModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="w-full max-w-6xl overflow-y-auto max-h-[90vh]">
+      <DialogContent className="w-full max-w-6xl overflow-y-auto h-[80vh] max-h-[90vh]">
         <DialogHeader className="hidden">
           <DialogTitle className=""></DialogTitle>
         </DialogHeader>
@@ -84,22 +82,27 @@ export function GlobalModal() {
     "
           >
             <div className="flex w-full">
-             
-                {stepperData.map((items) => (
-                   <Button variant={"default"} className={cn("flex-1 border-r-2 rounded-none",
-                    steps === items.stepDetails.number ? "bg-muted-foreground text-black hover:bg-white" :"", "first:rounded-l-md last:rounded-r-md last:border-r-0",
-
-                 
-
-                   )} onClick={() => setSteps(items.stepDetails.number)}>
-                        {items.stepDetails.content}
-                    
-                   </Button>
-                ))}
+              {stepperData.map((items, i) => (
+                <Button
+                  key={i}
+                  variant={"default"}
+                  className={cn(
+                    "flex-1 border-r-2 rounded-none",
+                    currentStep === items.stepDetails.number
+                      ? "bg-muted-foreground text-black hover:bg-white"
+                      : "",
+                    "first:rounded-l-md last:rounded-r-md last:border-r-0"
+                  )}
+                  onClick={() => jumpStep(items.stepDetails.number)}
+                >
+                  {items.stepDetails.content}
+                </Button>
+              ))}
             </div>
-            <BasicDetails />
+            {currentStep === 0 && <BasicDetails />}
+            {currentStep === 1 && <ThankYouDetails/>}
+            {currentStep === 2 && <Customize/>}
           </div>
-
         </div>
       </DialogContent>
     </Dialog>

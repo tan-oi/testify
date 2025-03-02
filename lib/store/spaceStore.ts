@@ -29,8 +29,9 @@ type Space = {
   allowVideo: boolean;
   allowShare: boolean;
   questions: Questions[];
-  thankYouText: string;
-
+  thankYouHeader: string;
+  thankYouMessage : string;
+  
 };
 
 const initialData: Partial<Space> = {
@@ -39,25 +40,33 @@ const initialData: Partial<Space> = {
   headerDescription:
     "hey thanks for buying our proudct, we'd appreciate a warm review",
   allowConsent: true,
-  allowVideo: true,
+  allowVideo: false,
   allowShare: true,
   questions: defaultQuestions,
-  thankYouText: "Thank you for sharing your experiences."
+  thankYouHeader: "Thank you!",
+  thankYouMessage : "Thank you so much for your shoutout! It means a ton for us!"
 };
 
 interface SpaceModalStore {
   isOpen: boolean;
   type: "create" | "edit";
+  currentStep: number;
+  maxSteps: number;
   formData: Partial<Space>;
   updateFormData: (data: Partial<Space>) => void;
   closeModal: () => void;
 
   openModal: (type: "create" | "edit") => void;
+  nextStep: () => void;
+  prevStep: () => void;
+  jumpStep: (data: number) => void;
 }
 
 export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
+  currentStep: 0,
+  maxSteps: 3,
   isOpen: false,
-  formData: {...initialData},
+  formData: { ...initialData },
   updateFormData: (data) =>
     set((state) => ({
       formData: {
@@ -71,6 +80,23 @@ export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
     set((state) => ({
       isOpen: true,
       type,
-      formData: type === "edit" && initialValues ? { ...state.formData, initialValues } : state.formData, 
+      formData:
+        type === "edit" && initialValues
+          ? { ...state.formData, initialValues }
+          : state.formData,
     })),
+
+  nextStep: () =>
+    set((state) => ({
+      currentStep: state.currentStep + 1,
+    })),
+  prevStep: () =>
+    set((state) => ({
+      currentStep: Math.max(0, state.currentStep - 1),
+    })),
+
+  jumpStep: (data: number) =>
+    set({
+      currentStep: data,
+    }),
 }));
