@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { StepChange } from "../stepChange";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import { Switch } from "@/components/ui/switch";
 const basicDetailsSchema = z.object({
   name: z.string().min(3),
   headerTitle: z
@@ -38,22 +38,20 @@ const basicDetailsSchema = z.object({
     .max(100, {
       message: "keep it short and classy",
     }),
-  allowConsent: z.boolean().default(true),
+  askConsent: z.boolean().default(true),
   allowVideo: z.boolean().default(false),
- 
 });
 
 export function BasicDetails() {
-  const { formData, updateFormData, nextStep } = useSpaceModalStore();
+  const { formData, type, updateFormData, nextStep } = useSpaceModalStore();
   const form = useForm<z.infer<typeof basicDetailsSchema>>({
     resolver: zodResolver(basicDetailsSchema),
-    defaultValues: {
-      headerDescription :"",
-      headerTitle : "",
-      name :"",
-      allowVideo : true,
-     
-      allowConsent : true
+    defaultValues: formData || {
+      headerDescription: "",
+      headerTitle: "",
+      name: "",
+      allowVideo: true,
+      askConsent: true,
     },
   });
 
@@ -66,20 +64,22 @@ export function BasicDetails() {
 
   return (
     <Form {...form}>
+      <div className="md:mt-2">
+        <h1 className="md:text-3xl font-bold">
+          {type === "create" ? "Create a new space" : "Edit a space"}
+        </h1>
+      </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
         <FormField
           control={form.control}
-          name="headerTitle"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Hwadwe</FormLabel>
+              <FormLabel>Space Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="hey, hope you're having a blast with our product"
-                  {...field}
-                />
+                <Input placeholder="myspace" {...field} />
               </FormControl>
-             
+
               <FormMessage />
             </FormItem>
           )}
@@ -87,14 +87,17 @@ export function BasicDetails() {
 
         <FormField
           control={form.control}
-          name="name"
+          name="headerTitle"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Header Title</FormLabel>
               <FormControl>
-                <Input placeholder="my-soace" {...field} />
+                <Input
+                  placeholder="hey, hope you're having a blast with our product"
+                  {...field}
+                />
               </FormControl>
-             
+
               <FormMessage />
             </FormItem>
           )}
@@ -105,38 +108,35 @@ export function BasicDetails() {
           name="headerDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Your custom messsage</FormLabel>
               <FormControl>
                 <Input
                   placeholder="please make sure you give apt details regarding what this form is for"
                   {...field}
                 />
               </FormControl>
-             
+
               <FormMessage />
             </FormItem>
           )}
         />
 
-<FormField
+        <FormField
           control={form.control}
-          name="allowConsent"
+          name="askConsent"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
               <FormControl>
-                <Checkbox
+                <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel>
-                  Use this testimonial in marketing campaigns
+                  Ask for consent
                 </FormLabel>
-                <FormDescription>
-                  You can use the testimonial 
-               
-                </FormDescription>
+                <FormDescription>We recommend taking users permission, it is better to use a testimonial after getting a consent</FormDescription>
               </div>
             </FormItem>
           )}
@@ -148,17 +148,17 @@ export function BasicDetails() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
               <FormControl>
-              <Checkbox
+                <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormLabel>Allow users to submit videos as testimonial?</FormLabel>
+              <FormLabel>
+                Allow users to submit videos as testimonial?
+              </FormLabel>
             </FormItem>
           )}
         />
-
-      
 
         <StepChange />
       </form>

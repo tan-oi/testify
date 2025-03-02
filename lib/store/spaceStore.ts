@@ -25,13 +25,12 @@ type Space = {
   logo?: string;
   headerTitle: string;
   headerDescription: string;
-  allowConsent: boolean;
+  askConsent: boolean;
   allowVideo: boolean;
   allowShare: boolean;
   questions: Questions[];
   thankYouHeader: string;
-  thankYouMessage : string;
-  
+  thankYouMessage: string;
 };
 
 const initialData: Partial<Space> = {
@@ -39,12 +38,13 @@ const initialData: Partial<Space> = {
   headerTitle: "your space header stays here",
   headerDescription:
     "hey thanks for buying our proudct, we'd appreciate a warm review",
-  allowConsent: true,
+  askConsent: true,
   allowVideo: false,
   allowShare: true,
   questions: defaultQuestions,
   thankYouHeader: "Thank you!",
-  thankYouMessage : "Thank you so much for your shoutout! It means a ton for us!"
+  thankYouMessage:
+    "Thank you so much for your shoutout! It means a ton for us!",
 };
 
 interface SpaceModalStore {
@@ -52,7 +52,7 @@ interface SpaceModalStore {
   type: "create" | "edit";
   currentStep: number;
   maxSteps: number;
-  formData: Partial<Space>;
+  formData: Partial<Space> | null;
   updateFormData: (data: Partial<Space>) => void;
   closeModal: () => void;
 
@@ -66,7 +66,7 @@ export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
   currentStep: 0,
   maxSteps: 3,
   isOpen: false,
-  formData: { ...initialData },
+  formData: null,
   updateFormData: (data) =>
     set((state) => ({
       formData: {

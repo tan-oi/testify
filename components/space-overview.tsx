@@ -13,9 +13,13 @@ import { Input } from "./ui/input";
 import { useSpaceModalStore } from "@/lib/store/spaceStore";
 
 export function SpaceOverview() {
-  const { openModal } = useSpaceModalStore();
+  const { openModal, formData } = useSpaceModalStore();
   return (
     <>
+
+    <Button onClick={() => console.log(formData)}>
+       getting the for data
+    </Button>
       <div className="flex flex-col space-y-8">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl text-foreground font-semibold">Spaces</h2>
