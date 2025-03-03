@@ -93,7 +93,7 @@
                         : "",
                       "first:rounded-l-md last:rounded-r-md last:border-r-0"
                     )}
-                    onClick={() => jumpStep(items.stepDetails.number)}
+                    // onClick={() => jumpStep(items.stepDetails.number)}
                   >
                     {items.stepDetails.content}
                   </Button>

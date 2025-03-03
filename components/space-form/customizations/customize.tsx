@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StepChange } from "../stepChange";
-import { Button } from "@/components/ui/button";
+
 import { useSpaceModalStore } from "@/lib/store/spaceStore";
 import {
   Form,
@@ -18,28 +18,49 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEffect } from "react";
+import { createSpace } from "@/app/actions/space.actions";
+import { toast } from "sonner";
+
+
 
 
 export function Customize() {
   const { formData,updateFormData } = useSpaceModalStore();
+  const allowVideo = formData?.allowVideo || false;
 
-  const defaultVals = {
-    textLength : 300, 
-    ...(formData?.allowVideo && {
-      videoLength : "30"
-    })
-  }
-  
-  const form = useForm({
-    defaultValues: defaultVals
+   const customizeSchema = z.object({
+    textLength: z.coerce
+      .number()
+      .int("Text length must be a whole number")
+      .positive("Text length must be positive")
+      .default(300),
+      videoLength: allowVideo
+      ? z.coerce.number().int().positive("Video length must be a positive number")
+      : z.union([z.number().optional(), z.null()]).optional()
   });
 
-  const onSubmit = (values) => {
+  
+  const form = useForm<z.infer<typeof customizeSchema>>({
+    resolver: zodResolver(customizeSchema),
+    defaultValues: {
+      textLength: formData?.textLength || 300,
+      videoLength: formData?.videoLength || (allowVideo ? 30 : null)
+    }
+  });
+
+  const onSubmit = (values : z.infer<typeof customizeSchema>) => {
     console.log(values);
-    
-    updateFormData(values)
-    console.log(formData,"formdata");
+    toast.success("space logged successfully")
+    if(!("videoLength" in values))  
+    {
+      values = {...values, videoLength : null}  
+    }
+    const finalSpaceDetails = {...formData,...values}
+
+    createSpace(finalSpaceDetails);
+
+    updateFormData(finalSpaceDetails)
+
   };
 
  
@@ -61,7 +82,7 @@ export function Customize() {
             name="textLength"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Max character for a testimonial</FormLabel>
+                <FormLabel>Max length of text testimonial</FormLabel>
 
                 <FormControl>
                   <Input placeholder="300" {...field} type="number" />
@@ -76,18 +97,21 @@ export function Customize() {
             name="videoLength"
             render={({field}) =>(
               <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="30">30</SelectItem>
-                  <SelectItem value="45">45</SelectItem>
-               
-                </SelectContent>
-              </Select>
+                  <FormLabel>Max length of a video testimonial</FormLabel>
+                  <Select 
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    defaultValue={field.value?.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select video length" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="30">30 seconds</SelectItem>
+                      <SelectItem value="45">45 seconds</SelectItem>
+                    </SelectContent>
+                  </Select>
               </FormItem>
             )}
             />

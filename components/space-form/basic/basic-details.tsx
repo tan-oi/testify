@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { StepChange } from "../stepChange";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-const basicDetailsSchema = z.object({
+export const basicDetailsSchema = z.object({
   name: z.string().min(3),
   headerTitle: z
     .string()
@@ -40,10 +40,14 @@ const basicDetailsSchema = z.object({
     }),
   askConsent: z.boolean().default(true),
   allowVideo: z.boolean().default(false),
+  allowStarRatings: z.boolean().default(true),
 });
 
 export function BasicDetails() {
   const { formData, type, updateFormData, nextStep } = useSpaceModalStore();
+
+  const initialData = (type === "edit") ? formData : null
+  
   const form = useForm<z.infer<typeof basicDetailsSchema>>({
     resolver: zodResolver(basicDetailsSchema),
     defaultValues: formData || {
@@ -52,12 +56,12 @@ export function BasicDetails() {
       name: "",
       allowVideo: true,
       askConsent: true,
+      allowStarRatings: true,
     },
   });
 
   const onSubmit = (data: z.infer<typeof basicDetailsSchema>) => {
     console.log(data);
-    // form.reset();
     updateFormData(data);
     nextStep();
   };
@@ -133,10 +137,11 @@ export function BasicDetails() {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Ask for consent
-                </FormLabel>
-                <FormDescription>We recommend taking users permission, it is better to use a testimonial after getting a consent</FormDescription>
+                <FormLabel>Ask for consent</FormLabel>
+                <FormDescription>
+                  We recommend taking users permission, it is better to use a
+                  testimonial after getting a consent
+                </FormDescription>
               </div>
             </FormItem>
           )}
@@ -155,6 +160,24 @@ export function BasicDetails() {
               </FormControl>
               <FormLabel>
                 Allow users to submit videos as testimonial?
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="allowStarRatings"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel>
+                Allow users to rate your [service/product] out of 5 stars?
               </FormLabel>
             </FormItem>
           )}

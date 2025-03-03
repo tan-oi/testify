@@ -19,7 +19,7 @@
   import { Checkbox } from "@/components/ui/checkbox";
   import { Switch } from "@/components/ui/switch";
 
-  const thankYouSchema = z.object({
+ export const thankYouSchema = z.object({
     thankYouHeader: z
       .string()
       .min(5, {

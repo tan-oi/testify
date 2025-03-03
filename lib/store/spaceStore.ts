@@ -28,9 +28,13 @@ type Space = {
   askConsent: boolean;
   allowVideo: boolean;
   allowShare: boolean;
+  allowStarRatings : boolean;
+
   questions: Questions[];
   thankYouHeader: string;
   thankYouMessage: string;
+  textLength : number;
+  videoLength : number | null;
 };
 
 const initialData: Partial<Space> = {
@@ -41,6 +45,7 @@ const initialData: Partial<Space> = {
   askConsent: true,
   allowVideo: false,
   allowShare: true,
+  allowStarRatings : true,
   questions: defaultQuestions,
   thankYouHeader: "Thank you!",
   thankYouMessage:
