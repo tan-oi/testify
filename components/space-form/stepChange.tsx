@@ -2,8 +2,9 @@
 
 import { useSpaceModalStore } from "@/lib/store/spaceStore";
 import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
-export function StepChange() {
+export function StepChange({isLoading = false}) {
   const { nextStep, prevStep, currentStep, maxSteps } = useSpaceModalStore();
   return (
     <div className="flex md:justify-between items-center">
@@ -12,12 +13,20 @@ export function StepChange() {
       </Button>
       {currentStep != maxSteps - 1 ? (
         <Button type="submit" 
-        // onClick={nextStep}
+        
         >
           Next
         </Button>
       ) : (
-        <Button type="submit">Submit</Button>
+       
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (  
+                  <Loader2 className="animate-spin size-4 mr-4"/> 
+              ) : (
+                "Submit"
+              )}
+
+            </Button>
       )}
     </div>
   );

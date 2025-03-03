@@ -20,13 +20,20 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createSpace } from "@/app/actions/space.actions";
 import { toast } from "sonner";
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {useSession} from "next-auth/react"
 
 
 
 export function Customize() {
+  const router = useRouter();
+
+  const {data :session} = useSession();
+  if(!session|| !session?.user) router.push("/auth");
   const { formData,updateFormData } = useSpaceModalStore();
   const allowVideo = formData?.allowVideo || false;
+  const [isLoading,setIsLoading] = useState(false);
 
    const customizeSchema = z.object({
     textLength: z.coerce
@@ -48,21 +55,52 @@ export function Customize() {
     }
   });
 
-  const onSubmit = (values : z.infer<typeof customizeSchema>) => {
-    console.log(values);
-    toast.success("space logged successfully")
-    if(!("videoLength" in values))  
-    {
-      values = {...values, videoLength : null}  
+  
+  const onSubmit = async (values: z.infer<typeof customizeSchema>) => {
+    try {
+      setIsLoading(true);
+  
+      console.log(values);
+  
+   
+      const submittedValues = {
+        ...values,
+        videoLength: values.videoLength ?? null
+      };
+      
+      const finalSpaceDetails = {...formData, ...submittedValues};
+      updateFormData(finalSpaceDetails);
+      
+      
+      const result = await createSpace(finalSpaceDetails);
+  
+      if (result?.success) {
+        toast.success(result.message || "Space creation success, your dashboard would update within a few seconds");
+        router.push(`/spaces/${result.spaceSlug}`);
+        //@ts-ignore
+        updateFormData(null);
+      } else {
+        console.log(result?.error)
+        toast.error("Failed to create a space, please try again");
+  
+        if (result?.issues) {
+          Object.entries(result.issues).forEach(([field, error]) => {
+            if (field in form.formState.errors) {
+              form.setError(field as any, { 
+                type: "server", 
+                message: Array.isArray(error) ? error[0] : error.toString() 
+              });
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
-    const finalSpaceDetails = {...formData,...values}
-
-    createSpace(finalSpaceDetails);
-
-    updateFormData(finalSpaceDetails)
-
   };
-
  
   
   return (
@@ -116,7 +154,7 @@ export function Customize() {
             )}
             />
           )}
-          <StepChange />
+          <StepChange isLoading={isLoading}/>
         </form>
       </Form>
     </>

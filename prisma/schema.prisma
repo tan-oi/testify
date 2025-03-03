@@ -53,15 +53,20 @@ model SpaceCustomization {
 
     spaceHeader String
     spaceCustomMessage String
-    spaceQuestions String[]
-    spaceCollectionAllowed ContentType
+    // spaceQuestions String[]
+    spaceVideosAllowed Boolean
 
-    spaceTheme Theme @default(DARK)
+    // spaceTheme Theme @default(DARK)
     spaceStarRatings Boolean @default(true)
 
     spaceThankYouHeader String
     spaceThankYouDescription String
 
+    spaceAskConsent Boolean @default(true)
+    textLengthAllowed Int
+
+    videoLengthAllowed Int? 
+    shareAllowed Boolean @default(true)
     
 
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
