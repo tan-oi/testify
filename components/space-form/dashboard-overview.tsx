@@ -1,17 +1,12 @@
-import { auth } from "@/auth";
-import { DashboardOverview } from "@/components/space-form/dashboard-overview";
-import { SpaceOverview } from "@/components/space-overview";
-import { Card, CardContent } from "@/components/ui/card";
-import { Text, Video } from "lucide-react";
+import { Video } from "lucide-react"
+import { Card, CardContent } from "../ui/card"
 
-export default async function Dashboard() {
-  const session = await auth();
-  console.log(session);
-  return (
-    <>
-      <div className="px-4 pt-10 pb-14 space-y-10">
-       
-          {/* <div className="space-y-8">
+
+
+export function DashboardOverview() {
+    return(
+        <>
+        <div className="space-y-8">
             <h1 className="text-2xl sm:text-4xl text-foreground font-bold">
               Overview
             </h1>
@@ -54,15 +49,7 @@ export default async function Dashboard() {
                 </CardContent>
               </Card>
             </div>
-          </div> */}
-
-          <DashboardOverview/>
-        
-
-        <div>
-            <SpaceOverview/>
-        </div>
-      </div>
-    </>
-  );
+          </div>
+        </>
+    )
 }
