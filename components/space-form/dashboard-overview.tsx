@@ -1,9 +1,31 @@
+"use client"
 import { Video } from "lucide-react"
 import { Card, CardContent } from "../ui/card"
-
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 
 export function DashboardOverview() {
+    const { data,isLoading } = useQuery({
+    queryKey : ["dashboard","overview"],
+    queryFn : async () => {
+      const res = await fetch("/api/dashboard/overview");
+      if(!res.ok) throw new Error("failed to fetch");
+      return res.json();
+    },
+    staleTime : 25*1000,
+    refetchInterval : 30*1000,
+    
+    refetchIntervalInBackground : false,
+  
+  })
+
+  if(isLoading) {
+    return (
+      <p>loading brev</p>
+    )
+  }
+  const dashboardData = data.data
+
     return(
         <>
         <div className="space-y-8">
@@ -18,7 +40,7 @@ export function DashboardOverview() {
                     <h1 className="font-semibold text-muted-foreground">
                       Total Spaces
                     </h1>
-                    <p className="text-muted-foreground">1</p>
+                    <p className="text-muted-foreground">{dashboardData.spaceCount}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -29,7 +51,7 @@ export function DashboardOverview() {
                     <h1 className="font-semibold text-muted-foreground">
                       Text testimonials
                     </h1>
-                    <p className="text-muted-foreground">1</p>
+                    <p className="text-muted-foreground">{dashboardData.textTestimonials}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -41,7 +63,7 @@ export function DashboardOverview() {
                     <h1 className="font-semibold text-muted-foreground">
                       Video Testimonials
                     </h1>
-                    <p className="text-muted-foreground">1</p>
+                    <p className="text-muted-foreground">{dashboardData.videoTestimonials}</p>
                   </div>
                   <div>
                     <Video className="text-muted"/>
@@ -53,3 +75,4 @@ export function DashboardOverview() {
         </>
     )
 }
+

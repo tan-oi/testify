@@ -85,13 +85,16 @@ model Testimonials {
 
   consentDisplay Boolean @default(true)
 
-  spaceId String
+  spaceId String 
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
   // isPublished Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+
+  // @@index([spaceId,type])
 }
 model Account {
   userId            String

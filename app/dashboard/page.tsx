@@ -2,15 +2,42 @@ import { auth } from "@/auth";
 import { DashboardOverview } from "@/components/space-form/dashboard-overview";
 import { SpaceOverview } from "@/components/space-overview";
 import { Card, CardContent } from "@/components/ui/card";
+import { prisma } from "@/lib/prisma";
+import { fetchDashboardOverview, fetchSpaceOverview } from "@/lib/services/dashboardMetrics";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { Text, Video } from "lucide-react";
+import { redirect } from "next/navigation";
+
 
 export default async function Dashboard() {
   const session = await auth();
   console.log(session);
+  if (!session || !session?.user) redirect("/auth");
+  const userId = session?.user?.id;
+
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["dashboard", "overview"],
+    queryFn: () => fetchDashboardOverview(userId as string),
+  });
+
+
+  await queryClient.prefetchQuery({
+    queryKey : ["space","overview"],
+    queryFn : () => fetchSpaceOverview(userId as string)
+  })
+  const dehydratedState = dehydrate(queryClient);
+
+
   return (
     <>
-      <div className="px-4 pt-10 pb-14 space-y-10">
-       
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="px-4 pt-10 pb-14 space-y-10">
           {/* <div className="space-y-8">
             <h1 className="text-2xl sm:text-4xl text-foreground font-bold">
               Overview
@@ -56,13 +83,13 @@ export default async function Dashboard() {
             </div>
           </div> */}
 
-          <DashboardOverview/>
-        
+          <DashboardOverview />
 
-        <div>
-            <SpaceOverview/>
+          <div>
+            <SpaceOverview />
+          </div>
         </div>
-      </div>
+      </HydrationBoundary>
     </>
   );
 }

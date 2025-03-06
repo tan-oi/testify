@@ -43,7 +43,7 @@ export async function createSpace(data: unknown) {
     }
 
     const slugName = await generateUniqueSlug(formData.name);
-    console.log("slug", slugName);
+    
 
     const spaceDetails = await prisma.$transaction(async (tx) => {
       const createSpace = await tx.space.create({

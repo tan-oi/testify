@@ -23,15 +23,17 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {useSession} from "next-auth/react"
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
 export function Customize() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {data :session} = useSession();
   if(!session|| !session?.user) router.push("/auth");
-  const { formData,updateFormData } = useSpaceModalStore();
+  const { formData,updateFormData,closeModal } = useSpaceModalStore();
   const allowVideo = formData?.allowVideo || false;
   const [isLoading,setIsLoading] = useState(false);
 
@@ -77,8 +79,15 @@ export function Customize() {
       if (result?.success) {
         toast.success(result.message || "Space creation success, your dashboard would update within a few seconds");
         router.push(`/spaces/${result.spaceSlug}`);
+        
+
+        queryClient.invalidateQueries({
+          queryKey :  ["space","overview"]
+        })
         //@ts-ignore
-        updateFormData(null);
+        updateFormData(null); 
+        closeModal(); 
+        
       } else {
         console.log(result?.error)
         toast.error("Failed to create a space, please try again");
