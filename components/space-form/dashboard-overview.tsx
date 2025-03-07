@@ -13,7 +13,7 @@ export function DashboardOverview() {
       return res.json();
     },
     staleTime : 25*1000,
-    refetchInterval : 30*1000,
+    // refetchInterval : 30*1000,
     
     refetchIntervalInBackground : false,
   
