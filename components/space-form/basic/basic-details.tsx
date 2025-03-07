@@ -53,11 +53,16 @@ export function BasicDetails() {
 
   const { formData, type, updateFormData, nextStep } = useSpaceModalStore();
 
+  // const initialData = (type === "edit") ? formData : null
+  console.log(type);
+
+  // if(type === "create") formData = null;
   const initialData = (type === "edit") ? formData : null
-  
+
+    console.log(initialData);
   const form = useForm<z.infer<typeof basicDetailsSchema>>({
     resolver: zodResolver(basicDetailsSchema),
-    defaultValues: formData || {
+    defaultValues: initialData || {
       headerDescription: "",
       headerTitle: "",
       name: "",

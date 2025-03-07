@@ -61,7 +61,7 @@ interface SpaceModalStore {
   updateFormData: (data: Partial<Space>) => void;
   closeModal: () => void;
 
-  openModal: (type: "create" | "edit") => void;
+  openModal: (type: "create" | "edit", data : null | Partial<Space>) => void;
   nextStep: () => void;
   prevStep: () => void;
   jumpStep: (data: number) => void;
@@ -87,7 +87,7 @@ export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
       type,
       formData:
         type === "edit" && initialValues
-          ? { ...state.formData, initialValues }
+          ? { ...state.formData, ...initialValues }
           : state.formData,
     })),
 

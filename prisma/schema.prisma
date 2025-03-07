@@ -51,22 +51,22 @@ model SpaceCustomization {
   id String @id @default(uuid())
   spaceId String @unique
 
-    spaceHeader String
-    spaceCustomMessage String
+    headerTitle String
+    headerDescription String
     // spaceQuestions String[]
-    spaceVideosAllowed Boolean
+    allowVideo Boolean
 
     // spaceTheme Theme @default(DARK)
-    spaceStarRatings Boolean @default(true)
+    allowStarRatings Boolean @default(true)
 
-    spaceThankYouHeader String
-    spaceThankYouDescription String
+    thankYouHeader String
+    thankYouMessage String
 
-    spaceAskConsent Boolean @default(true)
-    textLengthAllowed Int
+    askConsent Boolean @default(true)
+    textLength Int
 
-    videoLengthAllowed Int? 
-    shareAllowed Boolean @default(true)
+    videoLength Int? 
+    allowShare Boolean @default(true)
     
 
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)

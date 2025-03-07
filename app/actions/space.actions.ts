@@ -58,17 +58,18 @@ export async function createSpace(data: unknown) {
       const spaceCustomization = await tx.spaceCustomization.create({
         data: {
           spaceId: createSpace.id,
-          spaceHeader: formData.headerTitle,
-          spaceCustomMessage: formData.headerDescription,
-          spaceVideosAllowed: formData.allowVideo,
-          spaceStarRatings: formData.allowStarRatings,
-          spaceThankYouHeader: formData.thankYouHeader,
-          spaceThankYouDescription: formData.thankYouMessage,
-          spaceAskConsent: formData.askConsent,
-          textLengthAllowed: formData.textLength,
-          shareAllowed: formData.allowShare,
+          //@ts-ignore
+          headerTitle: formData.headerTitle,
+          headerDescription: formData.headerDescription,
+          allowVideo: formData.allowVideo,
+          allowStarRatings: formData.allowStarRatings,
+          thankYouHeader: formData.thankYouHeader,
+          thankYouMessage: formData.thankYouMessage,
+          askConsent: formData.askConsent,
+          textLength: formData.textLength,
+          allowShare: formData.allowShare,
           ...(formData.videoLength !== null && {
-            videoLengthAllowed: formData.videoLength
+            videoLength: formData.videoLength
           })
         }
       });

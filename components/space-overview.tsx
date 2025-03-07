@@ -46,6 +46,23 @@ interface CachedSpaceData {
     };
   };
 }
+/*
+  {
+    "spaceName": "tanay",
+    "id": "fdb4c773-1997-49b4-bfbb-bf2ad5674716",
+    "spaceId": "cm7yr93dy0004ufvgsl6i418f",
+    "headerTitle": "hey, hope you're having a blast with our product.",
+    "headerDescription": "hey thanks for buying our proudct, we'd appreciate a warm review",
+    "allowVideo": true,
+    "allowStarRatings": true,
+    "thankYouHeader": "thank you so much",
+    "thankYouMessage": "means a lot, thanks a ton!",
+    "askConsent": true,
+    "textLength": 120,
+    "videoLength": 30,
+    "allowShare": true
+}
+*/
 
 
 
@@ -84,33 +101,9 @@ export function SpaceOverview() {
     );
 
 
-    /* 
-      {
-    "spaceSlug": "tanay",
-    "data": {
-        "spaceData": {
-            "spaceCustomization": {
-                "id": "5d63bf88-3358-4c08-a11b-43c0680c41be",
-                "spaceId": "cm7tl3p530001ufe013nxxonl",
-                "spaceHeader": "hey, hope you're having a blast with our product.",
-                "spaceCustomMessage": "please make sure you add a few details as to how our product has been helping you, thansks.",
-                "spaceVideosAllowed": true,
-                "spaceStarRatings": true,
-                "spaceThankYouHeader": "thank you so much",
-                "spaceThankYouDescription": "means a lot, thanks a ton!",
-                "spaceAskConsent": true,
-                "textLengthAllowed": 300,
-                "videoLengthAllowed": 30,
-                "shareAllowed": true
-            },
-            "name": "tanay"
-        }
-    }
-}
-    */
 
 
-    const data = {spaceName : cachedData?.spaceSlug, ...cachedData?.data?.spaceData?.spaceCustomization}
+    const data = {name : cachedData?.spaceSlug, ...cachedData?.data?.spaceData?.spaceCustomization}
 
     console.log("updated data",data);
   
@@ -174,7 +167,7 @@ export function SpaceOverview() {
     <div className="flex flex-col space-y-8">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl text-foreground font-semibold">Spaces</h2>
-        <Button onClick={() => openModal("create")}>Create a new space</Button>
+        <Button onClick={() => openModal("create",null)}>Create a new space</Button>
       </div>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
