@@ -37,6 +37,9 @@ export function Customize() {
   const allowVideo = formData?.allowVideo || false;
   const [isLoading,setIsLoading] = useState(false);
 
+    console.log(type);
+    // const initialData = type === "edit" ? formData : null;
+    const initialData = formData;
    const customizeSchema = z.object({
     textLength: z.coerce
       .number()
@@ -52,8 +55,8 @@ export function Customize() {
   const form = useForm<z.infer<typeof customizeSchema>>({
     resolver: zodResolver(customizeSchema),
     defaultValues: {
-      textLength: formData?.textLength || 300,
-      videoLength: formData?.videoLength || (allowVideo ? 30 : null)
+      textLength: initialData?.textLength || 300,
+      videoLength: initialData?.videoLength || (allowVideo ? 30 : null)
     }
   });
 
@@ -61,8 +64,17 @@ export function Customize() {
   const onSubmit = async (values: z.infer<typeof customizeSchema>) => {
     try {
       setIsLoading(true);
-  
-      console.log(values);
+     
+      if(type === "edit") {
+        console.log({
+          ...formData,...values
+        });
+        return;
+      }
+      console.log("last form data",values);
+      console.log({
+        ...formData
+      }, "form data before updation");
   
    
       const submittedValues = {
@@ -71,6 +83,9 @@ export function Customize() {
       };
       
       const finalSpaceDetails = {...formData, ...submittedValues};
+      
+      console.log("form data after updation", finalSpaceDetails);
+
       updateFormData(finalSpaceDetails);
       
       

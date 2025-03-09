@@ -67,7 +67,7 @@ interface CachedSpaceData {
 
 
 export function SpaceOverview() {
-  const { openModal } = useSpaceModalStore();
+  const { openModal,type } = useSpaceModalStore();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -96,19 +96,16 @@ export function SpaceOverview() {
 
     const cachedData = queryClient.getQueryData<CachedSpaceData>(queryKey);
     console.log(
-      "Cached data: found",
+      "Cached data", cachedData
       
     );
 
-
-
-
-    const data = {name : cachedData?.spaceSlug, ...cachedData?.data?.spaceData?.spaceCustomization}
+    const data = {name : cachedData?.data?.spaceData?.name, ...cachedData?.data?.spaceData?.spaceCustomization}
 
     console.log("updated data",data);
   
     if (cachedData) {
-      openModal("edit", data);
+      openModal("edit", data,false);
     } else {
       queryClient
         .fetchQuery({
@@ -125,7 +122,7 @@ export function SpaceOverview() {
           gcTime: Infinity,
         })
         .then((result) => {
-          openModal("edit", result.data.spaceData.spaceCustomization);
+          openModal("edit", result.data.spaceData.spaceCustomization,false);
         });
     }
   };
@@ -167,7 +164,7 @@ export function SpaceOverview() {
     <div className="flex flex-col space-y-8">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl text-foreground font-semibold">Spaces</h2>
-        <Button onClick={() => openModal("create",null)}>Create a new space</Button>
+        <Button onClick={() => openModal("create",null,true)}>Create a new space</Button>
       </div>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />

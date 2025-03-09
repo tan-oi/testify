@@ -22,10 +22,11 @@ const fullSchema = z.object({
 
 export async function createSpace(data: unknown) {
   try {
+    console.log(data);
     const session = await auth();
     
     const parsedData = fullSchema.safeParse(data);
-    console.log(parsedData);
+    // console.log(parsedData);
     
     if (!parsedData.success) {
       console.log(parsedData.error.stack, "error is");
@@ -53,7 +54,7 @@ export async function createSpace(data: unknown) {
           userId: session?.user?.id as string
         }
       });
-      console.log(createSpace, "space created");
+      // console.log(createSpace, "space created");
 
       const spaceCustomization = await tx.spaceCustomization.create({
         data: {
@@ -74,14 +75,14 @@ export async function createSpace(data: unknown) {
         }
       });
 
-      console.log(spaceCustomization, "spacecustomization details");
+      // console.log(spaceCustomization, "spacecustomization details");
 
       return {createSpace};
     });
     
     return { 
       success: true, 
-      spaceId: spaceDetails.createSpace.id,
+      // spaceId: spaceDetails.createSpace.id,
       spaceSlug: spaceDetails.createSpace.slug,
       message: "Space created successfully!" 
     };
@@ -94,3 +95,80 @@ export async function createSpace(data: unknown) {
     };
   }
 }
+
+
+// export async function editSpace(data : unknown) {
+//   try {
+//     const session = await auth();
+    
+//     //change schema to accomodate ids
+//     const parsedData = fullSchema.safeParse(data);
+//     console.log(parsedData);
+    
+//     if (!parsedData.success) {
+//       console.log(parsedData.error.stack, "error is");
+//       return { 
+//         success: false, 
+//         error: "Invalid form data", 
+//         issues: parsedData.error.format() 
+//       };
+//     }
+    
+//     const formData = parsedData.data;
+//     if(!session || !session?.user) {
+      
+//      redirect("/auth");
+//     }
+
+//     // const slugName = await generateUniqueSlug(formData.name);
+    
+
+//     const spaceDetails = await prisma.$transaction(async (tx) => {
+//       const findSpace = await tx.space.create({
+//         data: {
+//           name: formData.name as string,
+//           slug: slugName as string, 
+//           userId: session?.user?.id as string
+//         }
+//       });
+//       console.log(createSpace, "space created");
+
+//       const spaceCustomization = await tx.spaceCustomization.create({
+//         data: {
+//           spaceId: createSpace.id,
+//           //@ts-ignore
+//           headerTitle: formData.headerTitle,
+//           headerDescription: formData.headerDescription,
+//           allowVideo: formData.allowVideo,
+//           allowStarRatings: formData.allowStarRatings,
+//           thankYouHeader: formData.thankYouHeader,
+//           thankYouMessage: formData.thankYouMessage,
+//           askConsent: formData.askConsent,
+//           textLength: formData.textLength,
+//           allowShare: formData.allowShare,
+//           ...(formData.videoLength !== null && {
+//             videoLength: formData.videoLength
+//           })
+//         }
+//       });
+
+//       console.log(spaceCustomization, "spacecustomization details");
+
+//       return {createSpace};
+//     });
+    
+//     return { 
+//       success: true, 
+//       spaceId: spaceDetails.createSpace.id,
+//       spaceSlug: spaceDetails.createSpace.slug,
+//       message: "Space created successfully!" 
+//     };
+//   } 
+//   catch(error) {
+  
+//     return {
+//       success: false,
+//       error: error
+//     };
+//   }
+// }

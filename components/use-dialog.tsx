@@ -33,13 +33,13 @@
   import { Label } from "@/components/ui/label";
   import { useSpaceModalStore } from "@/lib/store/spaceStore";
   import { BasicDetails } from "./space-form/basic/basic-details";
-  import { useState } from "react";
+
   import { cn } from "@/lib/utils";
   import { ThankYouDetails } from "./space-form/thankyou/thankyou-details";
   import { Customize } from "./space-form/customizations/customize";
 
   export function GlobalModal() {
-    const { isOpen, type, formData, updateFormData, closeModal,currentStep,nextStep,prevStep,jumpStep } =
+    const { isOpen, type, formData, updateFormData, closeModal,currentStep,nextStep,prevStep } =
       useSpaceModalStore();
 
 
@@ -63,10 +63,8 @@
         },
       },
     ];
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value, type, checked } = e.target;
-      updateFormData({ [name]: type === "checkbox" ? checked : value });
-    };
+   
+    // if(type === "create") jumpStep(0);
 
     return (
       <Dialog open={isOpen} onOpenChange={closeModal}>

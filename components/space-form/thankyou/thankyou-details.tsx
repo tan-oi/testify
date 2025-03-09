@@ -34,13 +34,16 @@
   });
 
   export function ThankYouDetails() {
-    const { formData, nextStep, updateFormData } = useSpaceModalStore();
+    const { formData, nextStep, updateFormData,type } = useSpaceModalStore();
+    console.log(formData);
+    // const initialData = (type === "edit") ? formData : null
+    const initialData = formData;
     const form = useForm<z.infer<typeof thankYouSchema>>({
       resolver: zodResolver(thankYouSchema),
       defaultValues:  {
-        thankYouHeader: formData?.thankYouHeader || "",
-        thankYouMessage: formData?.thankYouMessage || "",
-        allowShare: formData?.allowShare === undefined ? true : formData.allowShare,
+        thankYouHeader: initialData?.thankYouHeader || "",
+        thankYouMessage: initialData?.thankYouMessage || "",
+        allowShare: initialData?.allowShare === undefined ? true : initialData.allowShare,
       }
       
     });

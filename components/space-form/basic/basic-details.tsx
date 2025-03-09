@@ -53,16 +53,18 @@ export function BasicDetails() {
 
   const { formData, type, updateFormData, nextStep } = useSpaceModalStore();
 
-  // const initialData = (type === "edit") ? formData : null
   console.log(type);
+  // if(type === "edit") {
+  //   const initialData = formData
+  // }  
 
-  // if(type === "create") formData = null;
-  const initialData = (type === "edit") ? formData : null
-
+  let initialData = (type === "edit") ? formData : null
+  
     console.log(initialData);
+
   const form = useForm<z.infer<typeof basicDetailsSchema>>({
     resolver: zodResolver(basicDetailsSchema),
-    defaultValues: initialData || {
+    defaultValues: formData || {
       headerDescription: "",
       headerTitle: "",
       name: "",
@@ -93,7 +95,7 @@ export function BasicDetails() {
             <FormItem>
               <FormLabel>Space Name</FormLabel>
               <FormControl>
-                <Input placeholder="myspace" {...field} />
+                <Input placeholder="myspace" {...field} disabled={type === "edit"}/>
               </FormControl>
 
               <FormMessage />

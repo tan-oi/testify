@@ -28,13 +28,13 @@ type Space = {
   askConsent: boolean;
   allowVideo: boolean;
   allowShare: boolean;
-  allowStarRatings : boolean;
+  allowStarRatings: boolean;
 
   questions: Questions[];
   thankYouHeader: string;
   thankYouMessage: string;
-  textLength : number;
-  videoLength : number | null;
+  textLength: number;
+  videoLength: number | null;
 };
 
 const initialData: Partial<Space> = {
@@ -45,7 +45,7 @@ const initialData: Partial<Space> = {
   askConsent: true,
   allowVideo: false,
   allowShare: true,
-  allowStarRatings : true,
+  allowStarRatings: true,
   questions: defaultQuestions,
   thankYouHeader: "Thank you!",
   thankYouMessage:
@@ -61,7 +61,11 @@ interface SpaceModalStore {
   updateFormData: (data: Partial<Space>) => void;
   closeModal: () => void;
 
-  openModal: (type: "create" | "edit", data : null | Partial<Space>) => void;
+  openModal: (
+    newType: "create" | "edit",
+    data: null | Partial<Space>,
+    fullReset: boolean | null
+  ) => void;
   nextStep: () => void;
   prevStep: () => void;
   jumpStep: (data: number) => void;
@@ -80,16 +84,33 @@ export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
       },
     })),
   type: "create",
-  closeModal: () => set({ isOpen: false }),
-  openModal: (type, initialValues = null) =>
-    set((state) => ({
-      isOpen: true,
-      type,
-      formData:
-        type === "edit" && initialValues
-          ? { ...state.formData, ...initialValues }
-          : state.formData,
-    })),
+  closeModal: () => set({ isOpen: false, currentStep: 0 }),
+  openModal: (
+    newType,
+    data,
+    fullReset
+  ) =>
+    set((state) => {
+      let newFormData = state.formData;
+
+      if (newType === "create" && state.type === "edit") {
+        newFormData = null;
+      }
+     
+      if (newType === "create" && fullReset) {
+        newFormData = null;
+      }
+      
+      if (newType === "edit" && data) {
+        newFormData = { ...newFormData, ...data };
+      }
+
+      return {
+        isOpen: true,
+        type: newType,
+        formData: newFormData,
+      };
+    }),
 
   nextStep: () =>
     set((state) => ({

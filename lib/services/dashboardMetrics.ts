@@ -82,9 +82,9 @@ export async function fetchSpaceOverview(userId : string) {
 }
 
 
-export async function fetchParticularSpace(slug : string) {
+export async function fetchParticularSpace(slug : string, userId : string) {
   const spaceData = await prisma.space.findUnique({
-    where : {slug},
+    where : {slug, userId},
     select : {spaceCustomization : true, name : true},
     
   })
