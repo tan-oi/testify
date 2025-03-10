@@ -10,57 +10,30 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {useSession} from "next-auth/react"
+import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSpaceModalStore } from "@/lib/store/spaceStore";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+
 import { StepChange } from "../stepChange";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
-export const basicDetailsSchema = z.object({
-  name: z.string().min(3),
-  headerTitle: z
-    .string()
-    .min(5, {
-      message: "we recommend having atleast 5 words as the title",
-    })
-    .max(50, {
-      message:
-        "To not overwhelm the user, we recommend not having a very long header",
-    }),
-  headerDescription: z
-    .string()
-    .min(5, {
-      message: "we recommend having atleast 5 words in description",
-    })
-    .max(100, {
-      message: "keep it short and classy",
-    }),
-  askConsent: z.boolean().default(true),
-  allowVideo: z.boolean().default(false),
-  allowStarRatings: z.boolean().default(true),
-});
+import { basicDetailsSchema } from "@/lib/schema";
+import { useEffect } from "react";
 
 export function BasicDetails() {
   const router = useRouter();
-  const {data : session} = useSession();
-  if(!session || !session?.user) {
-    router.push("/auth")
-  }
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (!session || !session?.user) {
+      router.push("/auth");
+    }
+  }, [session, router]);
 
   const { formData, type, updateFormData, nextStep } = useSpaceModalStore();
-
-  console.log(type);
-  // if(type === "edit") {
-  //   const initialData = formData
-  // }  
-
-  let initialData = (type === "edit") ? formData : null
-  
-    console.log(initialData);
 
   const form = useForm<z.infer<typeof basicDetailsSchema>>({
     resolver: zodResolver(basicDetailsSchema),
@@ -95,7 +68,11 @@ export function BasicDetails() {
             <FormItem>
               <FormLabel>Space Name</FormLabel>
               <FormControl>
-                <Input placeholder="myspace" {...field} disabled={type === "edit"}/>
+                <Input
+                  placeholder="myspace"
+                  {...field}
+                  disabled={type === "edit"}
+                />
               </FormControl>
 
               <FormMessage />

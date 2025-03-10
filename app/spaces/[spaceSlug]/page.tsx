@@ -12,7 +12,9 @@ async function isSpaceValid(spaceSlug : string, userId: string) {
   
 }
 
-export default async function SpacePage({params} : {params : {spaceSlug : string}}) {
+export default async function SpacePage({params} : {
+    params: Promise<{ spaceSlug: string }>
+  }) {
 
     const session = await auth();
     if(!session || !session?.user) redirect("/auth");

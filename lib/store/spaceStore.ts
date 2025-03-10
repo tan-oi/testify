@@ -1,19 +1,19 @@
 import { create } from "zustand";
 
-const defaultQuestions: Questions[] = [
-  {
-    id: "1",
-    text: "how did you find about our services?",
-  },
-  {
-    id: "2",
-    text: "how has our product helped you?",
-  },
-  {
-    id: "3",
-    text: "best thing about our product/services",
-  },
-];
+// const defaultQuestions: Questions[] = [
+//   {
+//     id: "1",
+//     text: "how did you find about our services?",
+//   },
+//   {
+//     id: "2",
+//     text: "how has our product helped you?",
+//   },
+//   {
+//     id: "3",
+//     text: "best thing about our product/services",
+//   },
+// ];
 
 interface Questions {
   id: string;
@@ -37,20 +37,20 @@ type Space = {
   videoLength: number | null;
 };
 
-const initialData: Partial<Space> = {
-  name: "",
-  headerTitle: "your space header stays here",
-  headerDescription:
-    "hey thanks for buying our proudct, we'd appreciate a warm review",
-  askConsent: true,
-  allowVideo: false,
-  allowShare: true,
-  allowStarRatings: true,
-  questions: defaultQuestions,
-  thankYouHeader: "Thank you!",
-  thankYouMessage:
-    "Thank you so much for your shoutout! It means a ton for us!",
-};
+// const initialData: Partial<Space> = {
+//   name: "",
+//   headerTitle: "your space header stays here",
+//   headerDescription:
+//     "hey thanks for buying our proudct, we'd appreciate a warm review",
+//   askConsent: true,
+//   allowVideo: false,
+//   allowShare: true,
+//   allowStarRatings: true,
+//   questions: defaultQuestions,
+//   thankYouHeader: "Thank you!",
+//   thankYouMessage:
+//     "Thank you so much for your shoutout! It means a ton for us!",
+// };
 
 interface SpaceModalStore {
   isOpen: boolean;

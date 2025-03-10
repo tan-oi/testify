@@ -28,9 +28,7 @@
   } from "@/components/ui/dialog";
 
   import { Button } from "@/components/ui/button";
-  import { Input } from "@/components/ui/input";
-  import { Switch } from "@/components/ui/switch";
-  import { Label } from "@/components/ui/label";
+ 
   import { useSpaceModalStore } from "@/lib/store/spaceStore";
   import { BasicDetails } from "./space-form/basic/basic-details";
 
@@ -39,7 +37,7 @@
   import { Customize } from "./space-form/customizations/customize";
 
   export function GlobalModal() {
-    const { isOpen, type, formData, updateFormData, closeModal,currentStep,nextStep,prevStep } =
+    const { isOpen, closeModal,currentStep } =
       useSpaceModalStore();
 
 
@@ -64,8 +62,7 @@
       },
     ];
    
-    // if(type === "create") jumpStep(0);
-
+  
     return (
       <Dialog open={isOpen} onOpenChange={closeModal}>
         <DialogContent className="w-full max-w-6xl overflow-y-auto h-[80vh] max-h-[90vh]">

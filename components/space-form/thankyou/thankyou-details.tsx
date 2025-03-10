@@ -7,7 +7,7 @@
   import {
     Form,
     FormControl,
-    FormDescription,
+    
     FormField,
     FormItem,
     FormLabel,
@@ -16,25 +16,13 @@
   import { useForm } from "react-hook-form";
   import { Input } from "@/components/ui/input";
   import { useSpaceModalStore } from "@/lib/store/spaceStore";
-  import { Checkbox } from "@/components/ui/checkbox";
   import { Switch } from "@/components/ui/switch";
+import { thankYouSchema } from "@/lib/schema";
 
- export const thankYouSchema = z.object({
-    thankYouHeader: z
-      .string()
-      .min(5, {
-        message: "Cmon, you gotta be a bit grateful",
-      })
-      .max(50, {
-        message:
-          "okay, that's enough, you don't have to put in the whole block of butter",
-      }),
-    thankYouMessage: z.string().min(5).max(50),
-    allowShare: z.boolean().default(true),
-  });
+
 
   export function ThankYouDetails() {
-    const { formData, nextStep, updateFormData,type } = useSpaceModalStore();
+    const { formData, nextStep, updateFormData } = useSpaceModalStore();
     console.log(formData);
     // const initialData = (type === "edit") ? formData : null
     const initialData = formData;
@@ -69,7 +57,7 @@
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Enter the text you'd want to show after the form is filled
+                    Enter the text you would want to show after the form is filled
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="thank you" {...field} />
@@ -86,7 +74,7 @@
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Enter the text you'd want to show after the form is filled
+                    Enter the text you would want to show after the form is filled
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="thank you" {...field} />

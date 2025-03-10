@@ -13,61 +13,14 @@ import { useSpaceModalStore } from "@/lib/store/spaceStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
+import { getDetailsQueryKey } from "@/lib/utils";
+import { SpaceOverViewDataInterface, CachedSpaceData } from "@/lib/types";
 
-interface SpaceOverViewDataInterface {
-  id: string;
-  name: string;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-  textTestimonials: number;
-  videoTestimonials: number;
-}
-
-interface CachedSpaceData {
-  spaceSlug: string;
-  data: {
-    spaceData: {
-      spaceCustomization: {
-        id: string;
-        spaceId: string;
-        spaceHeader: string;
-        spaceCustomMessage: string;
-        spaceVideosAllowed: boolean;
-        spaceStarRatings: boolean;
-        spaceThankYouHeader: string;
-        spaceThankYouDescription: string;
-        spaceAskConsent: boolean;
-        textLengthAllowed: number;
-        videoLengthAllowed: number;
-        shareAllowed: boolean;
-      };
-      name: string;
-    };
-  };
-}
-/*
-  {
-    "spaceName": "tanay",
-    "id": "fdb4c773-1997-49b4-bfbb-bf2ad5674716",
-    "spaceId": "cm7yr93dy0004ufvgsl6i418f",
-    "headerTitle": "hey, hope you're having a blast with our product.",
-    "headerDescription": "hey thanks for buying our proudct, we'd appreciate a warm review",
-    "allowVideo": true,
-    "allowStarRatings": true,
-    "thankYouHeader": "thank you so much",
-    "thankYouMessage": "means a lot, thanks a ton!",
-    "askConsent": true,
-    "textLength": 120,
-    "videoLength": 30,
-    "allowShare": true
-}
-*/
 
 
 
 export function SpaceOverview() {
-  const { openModal,type } = useSpaceModalStore();
+  const { openModal } = useSpaceModalStore();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -78,8 +31,9 @@ export function SpaceOverview() {
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime : 60*1000,
+    refetchInterval : 60*1000,
+    refetchOnMount : true
   });
 
   if (isLoading) return <p>Loading spaces...</p>;
@@ -89,29 +43,23 @@ export function SpaceOverview() {
     space.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getDetailsQueryKey = (slug: string) => ["space", "details", slug];
-
   const handleEditClick = (slug: string) => {
     const queryKey = getDetailsQueryKey(slug);
 
     const cachedData = queryClient.getQueryData<CachedSpaceData>(queryKey);
-    console.log(
-      "Cached data", cachedData
-      
-    );
 
-    const data = {name : cachedData?.data?.spaceData?.name, ...cachedData?.data?.spaceData?.spaceCustomization}
+    const data = {
+      name: cachedData?.data?.spaceData?.name,
+      ...cachedData?.data?.spaceData?.spaceCustomization,
+    };
 
-    console.log("updated data",data);
-  
     if (cachedData) {
-      openModal("edit", data,false);
+      openModal("edit", data, false);
     } else {
       queryClient
         .fetchQuery({
           queryKey,
           queryFn: async () => {
-            console.log("Fetching data for slug:", slug);
             const response = await fetch(`/api/space/${slug}/details`);
             if (!response.ok) {
               throw new Error("Failed to fetch space details");
@@ -119,25 +67,21 @@ export function SpaceOverview() {
             return response.json();
           },
           staleTime: Infinity,
-          gcTime: Infinity,
+          gcTime : 1000*60
+          
         })
         .then((result) => {
-          openModal("edit", result.data.spaceData.spaceCustomization,false);
+          openModal("edit", result.data.spaceData.spaceCustomization, false);
         });
     }
   };
 
   const prefetchSpaceData = (slug: string) => {
-    // if (prefetchedSlugs.has(slug)) {
-    //   console.log("Already prefetched:", slug);
-    //   return;
-    // }
-
     const queryKey = getDetailsQueryKey(slug);
-
+   
     if (queryClient.getQueryData(queryKey)) {
       console.log("Already in cache:", slug);
-      // setPrefetchedSlugs(prev => new Set(prev).add(slug));
+
       return;
     }
 
@@ -153,18 +97,17 @@ export function SpaceOverview() {
         return data;
       },
       staleTime: Infinity,
-      gcTime: Infinity,
+      gcTime: 1000 * 60,
     });
-    // .then(() => {
-    //   setPrefetchedSlugs(prev => new Set(prev).add(slug));
-    // });
   };
 
   return (
     <div className="flex flex-col space-y-8">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl text-foreground font-semibold">Spaces</h2>
-        <Button onClick={() => openModal("create",null,true)}>Create a new space</Button>
+        <Button onClick={() => openModal("create", null, true)}>
+          Create a new space
+        </Button>
       </div>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -184,9 +127,11 @@ export function SpaceOverview() {
             <CardContent className="pt-2 md:pt-4 flex items-center justify-between">
               <div className="flex flex-col space-y-3 w-full">
                 <div className="flex justify-between items-center">
+                  <Link href={`/spaces/${item.slug}`}>
                   <h1 className="font-semibold text-foreground text-xl">
                     {item.name}
                   </h1>
+                  </Link>
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -208,7 +153,10 @@ export function SpaceOverview() {
                         <DropdownMenuItem>Manage Testimonials</DropdownMenuItem>
                       </Link>
                       <DropdownMenuItem>Get link</DropdownMenuItem>
-                      <DropdownMenuItem>Delete Space</DropdownMenuItem>
+                    
+                      <DropdownMenuItem>
+                        Delete Space
+                        </DropdownMenuItem>
                       <DropdownMenuItem
                         onSelect={(e) => {
                           e.preventDefault();
@@ -231,8 +179,12 @@ export function SpaceOverview() {
               </div>
             </CardContent>
           </Card>
+       
         ))}
       </div>
     </div>
   );
 }
+
+
+

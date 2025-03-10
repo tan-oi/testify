@@ -2,7 +2,7 @@
   import { SessionProvider } from "next-auth/react";
   import { ThemeProvider } from "@/components/theme-provider";
   import { Toaster } from "sonner";
-  import { GlobalModal } from "@/components/use-dialog";
+  // import { GlobalModal } from "@/components/use-dialog";
   import {
     isServer,
     QueryClient,
@@ -45,7 +45,7 @@
             disableTransitionOnChange
           >
             {children}
-            <GlobalModal />
+            {/* <GlobalModal /> */}
             <Toaster richColors />
           </ThemeProvider>
           {process.env.NODE_ENV === "development" && (

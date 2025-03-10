@@ -67,7 +67,7 @@ export default function NotFound() {
           </h2>
 
           <p className="mb-8 max-w-md text-muted-foreground">
-            The coordinates you're looking for don't match any known destination in our system.
+            The coordinates you are  looking for do not match any known destination in our system.
           </p>
 
           <Button

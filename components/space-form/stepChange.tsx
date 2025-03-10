@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
 export function StepChange({isLoading = false}) {
-  const { nextStep, prevStep, currentStep, maxSteps } = useSpaceModalStore();
+  const {  prevStep, currentStep, maxSteps } = useSpaceModalStore();
   return (
     <div className="flex md:justify-between items-center">
       <Button className="" onClick={prevStep} disabled={currentStep == 0}>

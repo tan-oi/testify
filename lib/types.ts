@@ -16,3 +16,38 @@ export interface UserError{
     message : string;
     errorType : string;
 }
+
+export interface SpaceOverViewDataInterface {
+    id: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+    textTestimonials: number;
+    videoTestimonials: number;
+  }
+  
+
+
+export interface CachedSpaceData {
+    spaceSlug: string;
+    data: {
+      spaceData: {
+        spaceCustomization: {
+          id: string;
+          spaceId: string;
+          spaceHeader: string;
+          spaceCustomMessage: string;
+          spaceVideosAllowed: boolean;
+          spaceStarRatings: boolean;
+          spaceThankYouHeader: string;
+          spaceThankYouDescription: string;
+          spaceAskConsent: boolean;
+          textLengthAllowed: number;
+          videoLengthAllowed: number;
+          shareAllowed: boolean;
+        };
+        name: string;
+      };
+    };
+  }

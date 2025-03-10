@@ -1,8 +1,7 @@
 "use client"
 import { Video } from "lucide-react"
 import { Card, CardContent } from "../ui/card"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-
+import { useQuery } from "@tanstack/react-query"
 
 export function DashboardOverview() {
     const { data,isLoading } = useQuery({
@@ -12,10 +11,11 @@ export function DashboardOverview() {
       if(!res.ok) throw new Error("failed to fetch");
       return res.json();
     },
-    staleTime : 25*1000,
-    // refetchInterval : 30*1000,
+    staleTime : 60*1000,
+    refetchInterval : 60*1000,
     
     refetchIntervalInBackground : false,
+    
   
   })
 
@@ -28,10 +28,16 @@ export function DashboardOverview() {
 
     return(
         <>
+
+        
+
         <div className="space-y-8">
             <h1 className="text-2xl sm:text-4xl text-foreground font-bold">
               Overview
             </h1>
+
+
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
               <Card className="w-full h-[100px] md:h-[120px] border-muted border bg-secondary">

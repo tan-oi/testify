@@ -8,7 +8,6 @@ import { useSpaceModalStore } from "@/lib/store/spaceStore";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,105 +16,127 @@ import {
 
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { createSpace } from "@/app/actions/space.actions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { createSpace, editSpace } from "@/app/actions/space.actions";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {useSession} from "next-auth/react"
+import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
-
-
+import { getDetailsQueryKey } from "@/lib/utils";
 
 export function Customize() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const {data :session} = useSession();
-  if(!session|| !session?.user) router.push("/auth");
-  const { formData,updateFormData,closeModal,type } = useSpaceModalStore();
+  const { data: session } = useSession();
+  if (!session || !session?.user) router.push("/auth");
+  const { formData, updateFormData, closeModal, type } = useSpaceModalStore();
   const allowVideo = formData?.allowVideo || false;
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    console.log(type);
-    // const initialData = type === "edit" ? formData : null;
-    const initialData = formData;
-   const customizeSchema = z.object({
+  const customizeSchema = z.object({
     textLength: z.coerce
       .number()
       .int("Text length must be a whole number")
       .positive("Text length must be positive")
       .default(300),
-      videoLength: allowVideo
-      ? z.coerce.number().int().positive("Video length must be a positive number")
-      : z.union([z.number().optional(), z.null()]).optional()
+    videoLength: allowVideo
+      ? z.coerce
+          .number()
+          .int()
+          .positive("Video length must be a positive number")
+      : z.union([z.number().optional(), z.null()]).optional(),
   });
 
-  
   const form = useForm<z.infer<typeof customizeSchema>>({
     resolver: zodResolver(customizeSchema),
     defaultValues: {
-      textLength: initialData?.textLength || 300,
-      videoLength: initialData?.videoLength || (allowVideo ? 30 : null)
-    }
+      textLength: formData?.textLength || 300,
+      videoLength: formData?.videoLength || (allowVideo ? 30 : null),
+    },
   });
 
-  
   const onSubmit = async (values: z.infer<typeof customizeSchema>) => {
     try {
       setIsLoading(true);
-     
-      if(type === "edit") {
-        console.log({
-          ...formData,...values
-        });
-        return;
-      }
-      console.log("last form data",values);
-      console.log({
-        ...formData
-      }, "form data before updation");
-  
-   
       const submittedValues = {
         ...values,
-        videoLength: values.videoLength ?? null
+        videoLength: formData?.allowVideo ? values.videoLength : null,
       };
-      
-      const finalSpaceDetails = {...formData, ...submittedValues};
-      
-      console.log("form data after updation", finalSpaceDetails);
+
+      const finalSpaceDetails = { ...formData, ...submittedValues };
 
       updateFormData(finalSpaceDetails);
-      
-      
-      const result = await createSpace(finalSpaceDetails);
-  
-      if (result?.success) {
-        toast.success(result.message || "Space creation success, your dashboard would update within a few seconds");
-        router.push(`/spaces/${result.spaceSlug}`);
-        
 
-        queryClient.invalidateQueries({
-          queryKey :  ["space","overview"]
-        })
-        //@ts-ignore
-        updateFormData(null); 
-        closeModal(); 
-        
-      } else {
-        console.log(result?.error)
-        toast.error("Failed to create a space, please try again");
-  
-        if (result?.issues) {
-          Object.entries(result.issues).forEach(([field, error]) => {
-            if (field in form.formState.errors) {
-              form.setError(field as any, { 
-                type: "server", 
-                message: Array.isArray(error) ? error[0] : error.toString() 
-              });
-            }
+      if (type === "edit") {
+        const result = await editSpace(finalSpaceDetails);
+        if (result?.success) {
+          toast.success(result.message || "Space editted successfully");
+
+          const queryKey = getDetailsQueryKey(result?.slug?.slug ?? "");
+
+          queryClient.invalidateQueries({
+            queryKey,
           });
+          queryClient.removeQueries({ queryKey });
+
+          queryClient.invalidateQueries({
+            queryKey: ["space", "overview"],
+          });
+
+          //@ts-expect-error there is no other way
+          updateFormData(null);
+          closeModal();
+        } else {
+          toast.error("Failed to create a space, please try again");
+
+          if (result?.issues) {
+            Object.entries(result.issues).forEach(([field, error]) => {
+              if (field in form.formState.errors) {
+                form.setError(field as any, {
+                  type: "server",
+                  message: Array.isArray(error) ? error[0] : error.toString(),
+                });
+              }
+            });
+          }
+        }
+      } else {
+        const result = await createSpace(finalSpaceDetails);
+
+        if (result?.success) {
+          toast.success(
+            result.message ||
+              "Space creation success, your dashboard would update within a few seconds"
+          );
+          router.push(`/spaces/${result.spaceSlug}`);
+
+          queryClient.invalidateQueries({
+            queryKey: ["space", "overview"],
+          });
+          //@ts-expect-error there is no other way
+          updateFormData(null);
+          closeModal();
+        } else {
+          toast.error("Failed to create a space, please try again");
+
+          if (result?.issues) {
+            Object.entries(result.issues).forEach(([field, error]) => {
+              if (field in form.formState.errors) {
+                form.setError(field as any, {
+                  type: "server",
+                  message: Array.isArray(error) ? error[0] : error.toString(),
+                });
+              }
+            });
+          }
         }
       }
     } catch (error) {
@@ -125,11 +146,9 @@ export function Customize() {
       setIsLoading(false);
     }
   };
- 
-  
+
   return (
     <>
-     
       <Form {...form}>
         <div className="md:mt-2">
           <h1>customize</h1>
@@ -155,12 +174,13 @@ export function Customize() {
           />
 
           {formData?.allowVideo && (
-            <FormField control={form.control}
-            name="videoLength"
-            render={({field}) =>(
-              <FormItem>
+            <FormField
+              control={form.control}
+              name="videoLength"
+              render={({ field }) => (
+                <FormItem>
                   <FormLabel>Max length of a video testimonial</FormLabel>
-                  <Select 
+                  <Select
                     onValueChange={(value) => field.onChange(Number(value))}
                     defaultValue={field.value?.toString()}
                   >
@@ -174,11 +194,11 @@ export function Customize() {
                       <SelectItem value="45">45 seconds</SelectItem>
                     </SelectContent>
                   </Select>
-              </FormItem>
-            )}
+                </FormItem>
+              )}
             />
           )}
-          <StepChange isLoading={isLoading}/>
+          <StepChange isLoading={isLoading} />
         </form>
       </Form>
     </>

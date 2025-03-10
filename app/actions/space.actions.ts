@@ -1,65 +1,48 @@
-
 "use server";
 import { auth } from "@/auth";
 import { generateUniqueSlug } from "@/lib/generateSlug";
 import { prisma } from "@/lib/prisma";
+import { fullSchema } from "@/lib/schema";
+import { SpaceCustomization } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
-const fullSchema = z.object({
-  name: z.string().min(1, "Space name is required"),
-  headerTitle: z.string().min(1, "Header title is required"),
-  headerDescription: z.string().min(1, "Header description is required"),
-  askConsent: z.boolean().default(false),
-  allowVideo: z.boolean().default(false),
-  allowStarRatings: z.boolean().default(true),
-  thankYouHeader: z.string().min(1, "Thank you header is required"),
-  thankYouMessage: z.string().min(1, "Thank you message is required"),
-  allowShare: z.boolean().default(false),
-  textLength: z.number().int().positive("Text length must be positive"),
-  videoLength: z.number().int().nullable()
-});
 
 export async function createSpace(data: unknown) {
   try {
     console.log(data);
     const session = await auth();
-    
+
     const parsedData = fullSchema.safeParse(data);
-    // console.log(parsedData);
-    
+
     if (!parsedData.success) {
       console.log(parsedData.error.stack, "error is");
-      return { 
-        success: false, 
-        error: "Invalid form data", 
-        issues: parsedData.error.format() 
+      return {
+        success: false,
+        error: "Invalid form data",
+        issues: parsedData.error.format(),
       };
     }
-    
+
     const formData = parsedData.data;
-    if(!session || !session?.user) {
-      
-     redirect("/auth");
+    if (!session || !session?.user) {
+      redirect("/auth");
     }
 
     const slugName = await generateUniqueSlug(formData.name);
-    
 
     const spaceDetails = await prisma.$transaction(async (tx) => {
       const createSpace = await tx.space.create({
         data: {
           name: formData.name as string,
-          slug: slugName as string, 
-          userId: session?.user?.id as string
-        }
+          slug: slugName as string,
+          userId: session?.user?.id as string,
+        },
       });
-      // console.log(createSpace, "space created");
 
       const spaceCustomization = await tx.spaceCustomization.create({
         data: {
           spaceId: createSpace.id,
-          //@ts-ignore
+         
           headerTitle: formData.headerTitle,
           headerDescription: formData.headerDescription,
           allowVideo: formData.allowVideo,
@@ -70,105 +53,103 @@ export async function createSpace(data: unknown) {
           textLength: formData.textLength,
           allowShare: formData.allowShare,
           ...(formData.videoLength !== null && {
-            videoLength: formData.videoLength
-          })
-        }
+            videoLength: formData.videoLength,
+          }),
+        },
       });
 
-      // console.log(spaceCustomization, "spacecustomization details");
-
-      return {createSpace};
+      console.log(spaceCustomization);
+      return { createSpace };
     });
     
-    return { 
-      success: true, 
+
+    return {
+      success: true,
       // spaceId: spaceDetails.createSpace.id,
       spaceSlug: spaceDetails.createSpace.slug,
-      message: "Space created successfully!" 
+      message: "Space created successfully!",
     };
-  } 
-  catch(error) {
-  
+  } catch (error) {
     return {
       success: false,
-      error: error
+      error: error,
     };
   }
 }
 
+export async function editSpace(data: Partial<SpaceCustomization>) {
+  try {
+    const session = await auth();
+    if (!data.spaceId) {
+      return {
+        success: false,
+        error: "Internal server error, please try again.",
+      };
+    }
 
-// export async function editSpace(data : unknown) {
-//   try {
-//     const session = await auth();
-    
-//     //change schema to accomodate ids
-//     const parsedData = fullSchema.safeParse(data);
-//     console.log(parsedData);
-    
-//     if (!parsedData.success) {
-//       console.log(parsedData.error.stack, "error is");
-//       return { 
-//         success: false, 
-//         error: "Invalid form data", 
-//         issues: parsedData.error.format() 
-//       };
-//     }
-    
-//     const formData = parsedData.data;
-//     if(!session || !session?.user) {
-      
-//      redirect("/auth");
-//     }
+    if (!session || !session?.user) return redirect("/auth");
 
-//     // const slugName = await generateUniqueSlug(formData.name);
-    
+    const parsedData = fullSchema.safeParse(data);
 
-//     const spaceDetails = await prisma.$transaction(async (tx) => {
-//       const findSpace = await tx.space.create({
-//         data: {
-//           name: formData.name as string,
-//           slug: slugName as string, 
-//           userId: session?.user?.id as string
-//         }
-//       });
-//       console.log(createSpace, "space created");
+    if (!parsedData.success) {
+      console.log(parsedData.error.stack, "error is");
+      return {
+        success: false,
+        error: "Invalid form data",
+        issues: parsedData.error.format(),
+      };
+    }
 
-//       const spaceCustomization = await tx.spaceCustomization.create({
-//         data: {
-//           spaceId: createSpace.id,
-//           //@ts-ignore
-//           headerTitle: formData.headerTitle,
-//           headerDescription: formData.headerDescription,
-//           allowVideo: formData.allowVideo,
-//           allowStarRatings: formData.allowStarRatings,
-//           thankYouHeader: formData.thankYouHeader,
-//           thankYouMessage: formData.thankYouMessage,
-//           askConsent: formData.askConsent,
-//           textLength: formData.textLength,
-//           allowShare: formData.allowShare,
-//           ...(formData.videoLength !== null && {
-//             videoLength: formData.videoLength
-//           })
-//         }
-//       });
+    const formData = parsedData.data;
 
-//       console.log(spaceCustomization, "spacecustomization details");
+    const findSpace = await prisma.space.findUnique({
+      where: {
+        userId: session?.user?.id as string,
+        id: data.spaceId,
+      },
+      select: {
+        slug: true,
+      },
+    });
 
-//       return {createSpace};
-//     });
-    
-//     return { 
-//       success: true, 
-//       spaceId: spaceDetails.createSpace.id,
-//       spaceSlug: spaceDetails.createSpace.slug,
-//       message: "Space created successfully!" 
-//     };
-//   } 
-//   catch(error) {
-  
-//     return {
-//       success: false,
-//       error: error
-//     };
-//   }
-// }
+    console.log(findSpace);
+    if (!findSpace) {
+      return {
+        success: false,
+        error: "Unauthenticated",
+        statusCode: 404,
+      };
+    }
+
+    const updatedData = await prisma.spaceCustomization.update({
+      where: {
+        spaceId: data.spaceId,
+      },
+      data: {
+        headerTitle: formData.headerTitle,
+        headerDescription: formData.headerDescription,
+        askConsent: formData.askConsent,
+        allowShare: formData.allowShare,
+        allowStarRatings: formData.allowStarRatings,
+        allowVideo: formData.allowVideo,
+        thankYouHeader: formData.thankYouHeader,
+        thankYouMessage: formData.thankYouMessage,
+        textLength: formData.textLength,
+        videoLength: formData.videoLength,
+      },
+    });
+
+    console.log(updatedData, "update done");
+
+    return {
+      success: true,
+      slug: findSpace,
+      message: "Space edited successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err,
+    };
+  }
+}

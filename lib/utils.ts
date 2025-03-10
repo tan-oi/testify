@@ -8,6 +8,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
+export const getDetailsQueryKey = (slug: string) => ["space", "details", slug];
+
+
+
 
 
 

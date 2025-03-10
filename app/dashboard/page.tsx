@@ -1,15 +1,16 @@
 import { auth } from "@/auth";
 import { DashboardOverview } from "@/components/space-form/dashboard-overview";
 import { SpaceOverview } from "@/components/space-overview";
-import { Card, CardContent } from "@/components/ui/card";
-import { prisma } from "@/lib/prisma";
+
+import { GlobalModal } from "@/components/use-dialog";
+
 import { fetchDashboardOverview, fetchSpaceOverview } from "@/lib/services/dashboardMetrics";
 import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { Text, Video } from "lucide-react";
+
 import { redirect } from "next/navigation";
 
 
@@ -31,7 +32,7 @@ export default async function Dashboard() {
     queryKey : ["space","overview"],
     queryFn : () => fetchSpaceOverview(userId as string)
   })
-  const dehydratedState = dehydrate(queryClient);
+  // const dehydratedState = dehydrate(queryClient);
 
 
   return (
@@ -82,12 +83,12 @@ export default async function Dashboard() {
               </Card>
             </div>
           </div> */}
-
           <DashboardOverview />
 
           <div>
             <SpaceOverview />
           </div>
+          <GlobalModal/>
         </div>
       </HydrationBoundary>
     </>
