@@ -27,13 +27,14 @@ export async function createSpace(data: unknown) {
     if (!session || !session?.user) {
       redirect("/auth");
     }
+    const lowercaseName = formData.name.toLowerCase();
 
-    const slugName = await generateUniqueSlug(formData.name);
+    const slugName = await generateUniqueSlug(lowercaseName);
 
     const spaceDetails = await prisma.$transaction(async (tx) => {
       const createSpace = await tx.space.create({
         data: {
-          name: formData.name as string,
+          name: lowercaseName as string,
           slug: slugName as string,
           userId: session?.user?.id as string,
         },

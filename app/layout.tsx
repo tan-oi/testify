@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <AppProviders>
           <Navbar />
-          <div className="container max-w-5xl mx-auto">{children}</div>
+          <div className="container max-w-6xl mx-auto">{children}</div>
         </AppProviders>
       </body>
     </html>
