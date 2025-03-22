@@ -13,6 +13,7 @@ import { getTestimonials, isSpaceValid } from "@/lib/services/spaceMetrics";
 import { Button } from "@/components/ui/button";
 import { AboutOverview } from "@/components/testimonials-space/overview";
 import { GlobalModal } from "@/components/use-dialog";
+import { SpaceSidebar } from "@/components/testimonials-space/sidebar";
 
 // async function isSpaceValid(spaceSlug: string, userId: string) {
 //   return await prisma.space.findUnique({
@@ -56,19 +57,20 @@ export default async function SpacePage({
 
   return (
     <div className="pt-10 space-y-10">
-     
-     <div className="flex items-center justify-between ">
-      <h1 className="font-bold text-2xl">{space.name[0].toUpperCase() + space.name.substring(1)}</h1>
-     <AboutOverview/>
-     </div>
-     
-      <div>
+      <div className="flex gap-8">
+        <div className="rounded-2xl bg-secondary 
+        border border-slate-800 md:w-[320px]">
+            <SpaceSidebar/>
+        </div>
+        <div className="w-full">
+          
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Suspense fallback={<p>Loading testimonials...</p>}>
           <TestimonialsList spaceSlug={space.slug} />
         </Suspense>
         <GlobalModal/>
       </HydrationBoundary>
+        </div>
      </div>
      
       

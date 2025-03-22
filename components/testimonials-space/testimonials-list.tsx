@@ -2,48 +2,33 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight,Menu,X } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { SpaceSidebar } from "./sidebar";
+
+import { useSearchParams } from "next/navigation";
+import { contentStore } from "@/lib/store/contentStore";
+import { AllTestimonials } from "./main-content/all-testimonials";
+
+export function TestimonialsList({ spaceSlug }: { spaceSlug: string }) { 
+  
+  const currentView = contentStore((state) => state.currentView)
 
 
-
-
-
-
-
-
-export function TestimonialsList({ spaceSlug }: { spaceSlug: string }) {
- 
- 
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["testimonials", "space", spaceSlug],
-    queryFn: async () => {
-      const res = await fetch(`/api/space/${spaceSlug}/testimonials`);
-      if (!res.ok) throw new Error("failed to fetch");
-      return res.json();
-    },
-  });
-
-  if (isLoading) return <p>Chill brev</p>;
-
-  console.log(data);
+  if(currentView === "texts") return <p>Taks is rendering</p>
+  if(currentView === "videos") return <p>vods is rendering</p>
+  if(currentView === "liked") return <p>ked is rendering</p>
   return (
     <>
-      <div className="grid lg:grid-cols-3">
+   <AllTestimonials spaceSlug={spaceSlug} />
+      {/* <div className="grid lg:grid-cols-3">
         <div className="rounded-2xl bg-secondary">
             <SpaceSidebar/>
-                {/* muted-foreground */}
   
         </div>
         <div className="cols-span-2">
-
+          
         </div>
-        </div>
+        </div> */}
+        ok
     </>
   );
 }
 
-// cm7yr93dy0004ufvgsl6i418f
-//cm7yr7suc0002ufvgmlcjdbp5

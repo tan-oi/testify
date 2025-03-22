@@ -51,3 +51,9 @@ export interface CachedSpaceData {
       };
     };
   }
+
+ export interface SidebarElementInterface {
+    name : string;
+    viewName : string;
+    icon : string
+}

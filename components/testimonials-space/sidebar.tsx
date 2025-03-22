@@ -1,15 +1,29 @@
+import { SidebarElement } from "./sidebar-element";
+import { sidebarData } from "@/lib/constant";
 export function SpaceSidebar() {
-    return (
-        <>
-            <div className="h-[calc(80vh-100px)] my-5 mx-5 overflow-hidden flex flex-col">
-                <div className="px-6 overflow-y-auto flex flex-col">
-                   
-                   <h2 className="text-2xl font-semibold mb-5">
-                        Inbox
-                   </h2>
-                
-                </div>
-                </div>
-        </>
-    )
+  return (
+    <>
+      <div className="md:h-[calc(85vh-100px)] my-5 px-2 flex flex-col">
+        <div className="px-4 overflow-y-scroll no-scrollbar flex flex-col gap-6">
+
+        {sidebarData.map((section, sectionIdx) =>
+  Object.entries(section).map(([parent, items]) => (
+    <div key={`${parent}-${sectionIdx}`} className="flex flex-col gap-2 justify-start">
+      <div>
+      <h2 className="text-lg font-bold">{parent}</h2>
+        </div>
+        <div className="flex flex-col gap-1">
+      {items.map((item, itemIdx) => (
+       <SidebarElement key={item.viewName} 
+       {...item}
+       />
+      ))}
+      </div>
+    </div>
+  ))
+)}         
+</div>
+      </div>
+    </>
+  );
 }
