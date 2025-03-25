@@ -12,7 +12,7 @@ export function AllTestimonials({spaceSlug}: {spaceSlug : string}) {
           return res.json();
         },
         staleTime:30*10000,
-        refetchOnMount : false,
+        refetchOnMount : true,
       });
 
       if(isLoading) return <p>cooking</p>

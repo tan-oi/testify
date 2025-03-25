@@ -1,9 +1,4 @@
 "use client";
-
-import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronRight,Menu,X } from "lucide-react";
-
-import { useSearchParams } from "next/navigation";
 import { contentStore } from "@/lib/store/contentStore";
 import { AllTestimonials } from "./main-content/all-testimonials";
 

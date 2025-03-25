@@ -35,3 +35,11 @@ export async function getTestimonials(spaceId: string) {
       }
     });
   } 
+
+  export async function spaceExists(spaceSlug : string) {
+    return await prisma.space.findUnique({
+      where : {
+        slug : spaceSlug
+      }
+    })
+  }

@@ -60,8 +60,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({token,user}) {
       if(user) 
       token.id= user.id as string
-
-
       return token;
     },
     session({session,token}) {
