@@ -56,3 +56,24 @@ export const basicDetailsSchema = z.object({
     videoLength: z.number().int().nullable(),
   });
   
+
+
+  export const getTextTestimonialsSchema = ({
+    contentLength,
+    allowStarRatings
+  } : {
+    contentLength : number ,
+    allowStarRatings : boolean
+  }
+   ) => {
+      return z.object({
+        senderName : z.string().min(1,"Sender name is required"),
+        senderEmail : z.string().email("Invalid email, please insert a valid email"),
+        content : z.string().min(1, "cannot be empty, dude")
+        .max(contentLength, `It shouldn't exceed ${contentLength} character`),
+        consentGiven : z.boolean(),
+        rating : allowStarRatings? z.number().min(1, "you need to provide some rating").max(5, "the max ratings is 5") : z.optional(z.number())
+
+      })
+  }
+

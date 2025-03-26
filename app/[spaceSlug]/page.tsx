@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import TextTestimonial from "@/components/submit-testimonials/text-testimonials";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { spaceExists } from "@/lib/services/spaceMetrics";
 
@@ -31,8 +33,7 @@ export default async function ReceivedTestimonials(
                 <Card>
                     <CardHeader>
                         <CardTitle>
-                            <div>
-
+                            <div className="flex items-center justify-center">
                             {getFormDetails?.spaceCustomization?.headerTitle}
                             </div>
                             <div>
@@ -41,6 +42,26 @@ export default async function ReceivedTestimonials(
                         </CardTitle>
                     </CardHeader>
 
+                <CardContent className="ml-6">
+                    <div>
+                        <p>
+                            QUestions
+                        </p>
+                        <ul>
+                            <li>one</li>
+                            <li>two</li>
+                            <li>three</li>
+                        </ul>
+                    </div>
+                </CardContent>  
+                    <CardFooter className="block">
+                        <div className="flex justify-center items-center gap-4">
+                            <Button variant={"default"}>
+                                video
+                            </Button>
+                            <TextTestimonial getFormDetails={getFormDetails?.spaceCustomization || null}/>
+                        </div>
+                    </CardFooter>
                 </Card>
            </div>
         </>
