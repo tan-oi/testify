@@ -1,6 +1,6 @@
 "use client";
-import { Star, Asterisk } from "lucide-react";
-import { useState } from "react";
+import { Star, Asterisk, Loader2 } from "lucide-react";
+import { useState,useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { SpaceCustomization } from "@prisma/client";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -30,17 +29,20 @@ import { getTextTestimonialsSchema } from "@/lib/schema";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
-interface TextTestimonialProps {
-  getFormDetails: SpaceCustomization | null;
-}
 
+import { submitTextTestimonial } from "@/app/actions/testimonials.actions";
+
+import { toast } from "sonner";
+import { TextTestimonialProps } from "@/lib/types";
 export default function TextTestimonial({
   getFormDetails,
 }: TextTestimonialProps) {
   const [ratings, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [openMain, setOpenMain] = useState(false);
+  const [openThankYou, setThankYou] = useState(false);
+  const [isPending, startTransition] = useTransition()
 
-  console.log(getFormDetails);
 
   const textSchema = getTextTestimonialsSchema({
     contentLength: getFormDetails?.textLength as number,
@@ -60,14 +62,38 @@ export default function TextTestimonial({
   const { setValue, watch } = form;
   const rating = watch("rating");
 
-  function onSubmit(values: z.infer<typeof textSchema>) {
-    console.log(values);
-    form.reset();
-    
-  }
+  async function onSubmit(values: z.infer<typeof textSchema>) {
+    startTransition(async () => {
+      const res = await submitTextTestimonial({
+        ...values,
+        contentLength: getFormDetails?.textLength as number,
+        allowStarRatings: getFormDetails?.allowStarRatings as boolean,
+        spaceId: getFormDetails?.spaceId as string,
+      });
+      
+      if(res.success) {
+
+        toast.success(res.message);
+        form.reset();
+
+        setTimeout(() => {
+          setOpenMain(false);
+          setThankYou(true);
+        },2000)
+      }
+      
+      else {
+        toast.error(res.message);
+        console.log(res.error);
+      }
+      
+    })
+    }
 
   return (
-    <Dialog>
+    <>
+   
+    <Dialog open={openMain} onOpenChange={setOpenMain}>
       <DialogTrigger asChild>
         <Button variant="outline">text</Button>
       </DialogTrigger>
@@ -114,7 +140,6 @@ export default function TextTestimonial({
                                     : "fill-none text-gray-400"
                                 }`}
                                 onMouseEnter={() => setHoverRating(index + 1)}
-                               
                                 onClick={() => setValue("rating", index + 1)}
                               />
                             );
@@ -127,24 +152,23 @@ export default function TextTestimonial({
               />
             )}
 
-<FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-             
-              <FormControl>
-                <Textarea
-                  placeholder="Tell us about your experience"
-                  className="resize-none h-[80px]"
-                  {...field}
-                />
-              </FormControl>
-             
-              <FormMessage />
-            </FormItem>
-          )}
-        />             
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Tell us about your experience"
+                      className="resize-none h-[80px]"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -209,21 +233,49 @@ export default function TextTestimonial({
                 </FormItem>
               )}
             />
-          
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
 
-          <Button type="submit" variant={'default'}>
-                  Submit
-          </Button>
-        </DialogFooter>
-        </form>
+            <DialogFooter className="sm:justify-start">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary" disabled={isPending}>
+                  
+                  Close
+                </Button>
+              </DialogClose>
+
+              <Button type="submit" variant={"default"} disabled={isPending} className="flex items-center">
+                {isPending ? <Loader2 className="animate-spin"/> : "Submit"}
+              </Button>
+            </DialogFooter>
+          </form>
         </Form>
       </DialogContent>
     </Dialog>
+
+
+
+<Dialog open={openThankYou} onOpenChange={setThankYou}>
+<DialogContent>
+  <h3>Thank You!</h3>
+  <p>Your testimonial has been submitted.</p>
+
+  <img
+    src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjlmcDZyMXJxNGl2Z2hlcmthNTQ2NWlyYjdsZmYwd2NwaWJ3dmZqeiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/5GoVLqeAOo6PK/giphy.gif"
+    alt="Success GIF"
+    className="w-full mx-auto mt-4 rounded-md"
+  />
+
+  <DialogFooter>
+    
+  <Button
+    variant="default"
+    onClick={() => setThankYou(false)}
+    className="mt-4"
+  >
+    Close
+  </Button>
+  </DialogFooter>
+</DialogContent>
+</Dialog>
+</>
   );
 }

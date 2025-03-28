@@ -57,3 +57,10 @@ export interface CachedSpaceData {
     viewName : string;
     icon : string
 }
+
+
+import { SpaceCustomization } from "@prisma/client";
+
+export interface TextTestimonialProps {
+  getFormDetails: SpaceCustomization | null;
+}
