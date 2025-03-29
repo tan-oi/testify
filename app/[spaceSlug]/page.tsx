@@ -1,4 +1,6 @@
 import TextTestimonial from "@/components/submit-testimonials/text-testimonials";
+import VideoTestimonial from "@/components/submit-testimonials/video-testimonials";
+VideoTestimonial
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
@@ -56,9 +58,7 @@ export default async function ReceivedTestimonials(
                 </CardContent>  
                     <CardFooter className="block">
                         <div className="flex justify-center items-center gap-4">
-                            <Button variant={"default"}>
-                                video
-                            </Button>
+                        <VideoTestimonial/>
                             <TextTestimonial getFormDetails={getFormDetails?.spaceCustomization || null}/>
                         </div>
                     </CardFooter>
@@ -68,3 +68,66 @@ export default async function ReceivedTestimonials(
     )
 
 }
+
+// "use client";
+
+// import { UploadButton } from "@/lib/uploadthing";
+// import Image from "next/image";
+// import { useState } from "react";
+
+// export default function Home() {
+//   const [image,setImage] = useState<string|null>(null);
+//   const [video,setVideo] = useState<string|null>(null);
+//   return (
+//     <main className="flex min-h-screen flex-col items-center justify-between p-24">
+//       <UploadButton
+//         endpoint="imageUploader"
+//         onClientUploadComplete={(res) => {
+         
+//           console.log("Files: ", res[0].ufsUrl);
+//           setImage(res[0].ufsUrl);
+//           alert("Upload Completed");
+//         }}
+//         onUploadError={(error: Error) => {
+       
+//           alert(`ERROR! ${error.message}`);
+//         }}
+//       />
+//       <UploadButton
+//         endpoint="videoUploader"
+//         onClientUploadComplete={(res) => {
+//           setImage(null)
+//           console.log("Files: ", res);
+//           setVideo(res[0].ufsUrl)
+//           alert("Upload Completed");
+//         }}
+//         onUploadError={(error: Error) => {
+//           console.log(error.cause);
+//           alert(`ERROR! ${error.message}`);
+//         }}
+//       />
+
+
+//       {image && (
+        
+//         <Image src={image} alt="okay"
+//         width="100" height="100"/>
+
+       
+        
+//       )}
+
+//       {video && (
+//           <div className="flex justify-center items-center">
+//           <video controls width="600">
+//             <source src={video} type="video/mp4" />
+//             Your browser does not support the video tag.
+//           </video>
+//         </div>
+//       )}
+//     </main>
+//   );
+//       }
+
+
+

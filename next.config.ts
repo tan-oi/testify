@@ -5,6 +5,15 @@ const nextConfig: NextConfig = {
 
     ignoreDuringBuilds: true,
   },
+  images : {
+    remotePatterns : [
+      {
+        protocol : "https",
+        hostname: "0ctxyijyhg.ufs.sh",
+        pathname : "/f/*"
+      }
+    ]
+  }
 };
 
 export default nextConfig;
