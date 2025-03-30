@@ -77,3 +77,20 @@ export const basicDetailsSchema = z.object({
       })
   }
 
+
+
+  export const getVideoTestimonialsSchema = ({
+    allowStarRatings,
+    videoLength
+  } : {
+    allowStarRatings : boolean,
+    videoLength : number
+  }) => {
+    return z.object({
+      senderName: z.string().min(1,"Sender name is required"),
+      senderEmail : z.string().email("Invalid email, please insert a valid email!"),
+      rating : allowStarRatings? z.number().min(1,"you need to provide some rating").max(5,"the max ratings is 5") : z.optional(z.number()),
+      consentDisplay : z.boolean()
+
+    })
+  }

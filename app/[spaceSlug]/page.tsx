@@ -1,7 +1,5 @@
 import TextTestimonial from "@/components/submit-testimonials/text-testimonials";
 import VideoTestimonial from "@/components/submit-testimonials/video-testimonials";
-VideoTestimonial
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { spaceExists } from "@/lib/services/spaceMetrics";
@@ -30,9 +28,9 @@ export default async function ReceivedTestimonials(
     console.log(getFormDetails);
     return (
         <>
-           this is {spaceSlug}
+         
            <div className="container pt-10 flex items-center justify-center mx-auto">
-                <Card>
+                <Card className="md:min-w-[400px]">
                     <CardHeader>
                         <CardTitle>
                             <div className="flex items-center justify-center">
@@ -58,7 +56,9 @@ export default async function ReceivedTestimonials(
                 </CardContent>  
                     <CardFooter className="block">
                         <div className="flex justify-center items-center gap-4">
-                        <VideoTestimonial/>
+                            {
+                                getFormDetails?.spaceCustomization?.allowVideo ?  <VideoTestimonial getFormDetails={getFormDetails?.spaceCustomization || null}/> : null
+                            }
                             <TextTestimonial getFormDetails={getFormDetails?.spaceCustomization || null}/>
                         </div>
                     </CardFooter>

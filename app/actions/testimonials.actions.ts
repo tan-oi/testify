@@ -56,3 +56,35 @@ export async function submitTextTestimonial(
  }
   
 }
+
+
+
+export async function submitVideoTestimonial(values : Partial<Testimonials>) {
+  try {
+   
+    const uploadTestimonial = await prisma.testimonials.create({
+        data : {
+          videoUrl : values.videoUrl as string,
+          spaceId : values.spaceId as string,
+          senderName : values.senderName as string,
+          senderEmail : values.senderEmail as string,
+          consentDisplay : values.consentDisplay,
+          rating : values.rating
+        }
+    })
+   
+
+    console.log("uplaod values",uploadTestimonial);
+    return {
+      success : true,
+      message : "testimonial submitted!"
+    }
+  }
+  catch(err) {
+    return { 
+      success : false,
+      message : "internal server error"
+    }  
+  
+  }
+}

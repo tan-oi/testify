@@ -61,6 +61,7 @@ export interface CachedSpaceData {
 
 import { SpaceCustomization } from "@prisma/client";
 
-export interface TextTestimonialProps {
+export interface TestimonialProps {
   getFormDetails: SpaceCustomization | null;
 }
+

@@ -33,10 +33,11 @@ import { Textarea } from "../ui/textarea";
 import { submitTextTestimonial } from "@/app/actions/testimonials.actions";
 
 import { toast } from "sonner";
-import { TextTestimonialProps } from "@/lib/types";
+import { TestimonialProps } from "@/lib/types";
+import { Label } from "../ui/label";
 export default function TextTestimonial({
   getFormDetails,
-}: TextTestimonialProps) {
+}: TestimonialProps) {
   const [ratings, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
   const [openMain, setOpenMain] = useState(false);
@@ -95,7 +96,7 @@ export default function TextTestimonial({
    
     <Dialog open={openMain} onOpenChange={setOpenMain}>
       <DialogTrigger asChild>
-        <Button variant="outline">text</Button>
+        <Button variant="default" className="w-full" >Text</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg rounded-xl">
         <DialogHeader>
@@ -177,8 +178,8 @@ export default function TextTestimonial({
                 <FormItem>
                   <FormLabel className="relative w-fit">
                     <div className="flex items-center gap-[2px] w-full">
-                      Your Name
-                      <Asterisk className="size-3 absolute -top-1 left-16 fill-red-600 text-red-600" />
+                      <Label>Your Name</Label>
+                        <Asterisk className="size-3 absolute -top-1 left-16 fill-red-600 text-red-600" />
                     </div>
                   </FormLabel>
                   <FormControl>
