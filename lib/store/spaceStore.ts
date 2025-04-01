@@ -126,3 +126,21 @@ export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
       currentStep: data,
     }),
 }));
+
+
+type DeleteModalStore = {
+  isOpen: boolean;
+  values: any; // Generic type
+  deleteAction: ((data: any) => Promise<void>) | null;
+  openDeleteModal: <T>(data: T, deleteAction: (data: T) => Promise<void>) => void;
+  closeModal: () => void;
+};
+
+export const useDeleteModal = create<DeleteModalStore>((set) => ({
+  isOpen: false,
+  values: null,
+  deleteAction: null,
+  openDeleteModal: (values, deleteAction) =>
+    set({ isOpen: true, values, deleteAction }),
+  closeModal: () => set({ isOpen: false, values: null, deleteAction: null }),
+}));

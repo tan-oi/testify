@@ -9,21 +9,23 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
-import { useSpaceModalStore } from "@/lib/store/spaceStore";
+import { useDeleteModal, useSpaceModalStore } from "@/lib/store/spaceStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 import { getDetailsQueryKey } from "@/lib/utils";
 import { SpaceOverViewDataInterface, CachedSpaceData } from "@/lib/types";
+import { toast } from "sonner";
 
-
+import {DeleteModal} from "./delete-modal";
+import { deleteSpace } from "@/app/actions/space.actions";
 
 
 export function SpaceOverview() {
   const { openModal } = useSpaceModalStore();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
-
+  const  openDeleteModal  = useDeleteModal(state => state.openDeleteModal);
   const { data, isLoading } = useQuery({
     queryKey: ["space", "overview"],
     queryFn: async () => {
@@ -42,6 +44,14 @@ export function SpaceOverview() {
   const filteredSpaces = spaceOverViewData.filter((space) =>
     space.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const copyToClipboard = (value : string) => {
+    console.log(value);
+    navigator.clipboard.writeText(value).then(() => {
+      toast.info("link copied to clipboard");
+    })
+    .catch(() => toast.error("failed, try again"))
+  }
 
   const handleEditClick = (slug: string) => {
     const queryKey = getDetailsQueryKey(slug);
@@ -101,6 +111,7 @@ export function SpaceOverview() {
     });
   };
 
+  
   return (
     <div className="flex flex-col space-y-8">
       <div className="flex items-center justify-between">
@@ -152,9 +163,17 @@ export function SpaceOverview() {
                       <Link href={`/spaces/${item.slug}`}>
                         <DropdownMenuItem>Manage Testimonials</DropdownMenuItem>
                       </Link>
-                      <DropdownMenuItem>Get link</DropdownMenuItem>
+                      <DropdownMenuItem
+                         onSelect={() => {
+                          copyToClipboard(`${process.env.NEXT_PUBLIC_TRUE_HOST}/${item.slug}`)
+                        }}
+                      >Get link</DropdownMenuItem>
                     
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                      onSelect={() => {
+                        openDeleteModal(item,deleteSpace)
+                      }}
+                      >
                         Delete Space
                         </DropdownMenuItem>
                       <DropdownMenuItem

@@ -154,3 +154,8 @@ export async function editSpace(data: Partial<SpaceCustomization>) {
     };
   }
 }
+
+
+export async function deleteSpace(data : string) {
+  console.log(data);
+}
