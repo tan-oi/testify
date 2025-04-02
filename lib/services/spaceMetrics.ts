@@ -16,6 +16,9 @@ export async function getTestimonials(spaceId: string) {
         rating: true,
         senderEmail: true,
         senderName: true,
+        consentDisplay : true,
+        videoUrl : true,
+        createdAt : true
       }
     });
 }

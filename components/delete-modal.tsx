@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { CircleAlertIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -17,18 +17,46 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useDeleteModal } from "@/lib/store/spaceStore"
+import { useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 
 export  function DeleteModal() {
+  const queryClient = useQueryClient();
   const id = useId()
-  const [inputValue, setInputValue] = useState("")
-  const {isOpen,closeModal, deleteAction, values }  = useDeleteModal();
+  const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
+ 
+  const {isOpen,closeModal, deleteAction, values, metaData }  = useDeleteModal();
+   if(!deleteAction) return;
+
+   const handleDelete = async () => {
+    try {
+      setLoading(true);
+      const result = await deleteAction(values);
+      if(result.success) {
+        queryClient.invalidateQueries({
+          queryKey : ["space","overview"]
+        })
+        toast.success("Space deleted successfully!")
+      }
+      else toast.error("Something went wrong, please try again!")
+    }
+    catch(err) {
+      console.log(err);
+      toast.error("Something went wrong!");
+    }
+    finally{
+      setLoading(false);
+      closeModal()
+    }
+   
+
+  }
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Delete project</Button>
-      </DialogTrigger>
+     
       <DialogContent>
         <div className="flex flex-col items-center gap-2">
           <div
@@ -42,35 +70,38 @@ export  function DeleteModal() {
               Final confirmation
             </DialogTitle>
             <DialogDescription className="sm:text-center">
-              This action cannot be undone. To confirm, please enter the project
-              name <span className="text-foreground">Origin UI</span>.
+              This action cannot be undone. To confirm, please enter the {`${metaData?.entityType} `} 
+              name <span className="text-foreground">{`${values?.name}`}</span>.
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        <form className="space-y-5">
-          <div className="*:not-first:mt-2">
-            <Label htmlFor={id}>Project name</Label>
+        <form className="space-y-4">
+          <div className="*:not-first:mt-2 space-y-2">
+            <Label htmlFor={id}>{`${metaData?.entityType} name`}</Label>
             <Input
               id={id}
               type="text"
-              placeholder="Type Origin UI to confirm"
+              placeholder={`Type ${values?.name} to confirm`}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
           </div>
-          <DialogFooter>
+          <DialogFooter className="max-w-md:space-y-2">
             <DialogClose asChild>
-              <Button type="button" variant="outline" className="flex-1">
+              <Button type="button" variant="outline" className="flex-1"
+              disabled={loading}
+              >
                 Cancel
               </Button>
             </DialogClose>
             <Button
               type="button"
               className="flex-1"
-            //   disabled={inputValue !== PROJECT_NAME}
+              disabled={inputValue !== values?.name || loading}
+              onClick={handleDelete}
             >
-              Delete
+              {!loading? "Delete" : "Deleting"}
             </Button>
           </DialogFooter>
         </form>

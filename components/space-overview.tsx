@@ -16,8 +16,6 @@ import { useState } from "react";
 import { getDetailsQueryKey } from "@/lib/utils";
 import { SpaceOverViewDataInterface, CachedSpaceData } from "@/lib/types";
 import { toast } from "sonner";
-
-import {DeleteModal} from "./delete-modal";
 import { deleteSpace } from "@/app/actions/space.actions";
 
 
@@ -26,6 +24,9 @@ export function SpaceOverview() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const  openDeleteModal  = useDeleteModal(state => state.openDeleteModal);
+  const isOpen = useDeleteModal(state=> state.isOpen)
+
+
   const { data, isLoading } = useQuery({
     queryKey: ["space", "overview"],
     queryFn: async () => {
@@ -33,14 +34,15 @@ export function SpaceOverview() {
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
-    staleTime : 60*1000,
-    refetchInterval : 60*1000,
+    staleTime : 300*1000,
+    refetchInterval : 300*1000,
     refetchOnMount : true
   });
 
   if (isLoading) return <p>Loading spaces...</p>;
 
   const spaceOverViewData: SpaceOverViewDataInterface[] = data.data;
+  
   const filteredSpaces = spaceOverViewData.filter((space) =>
     space.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -170,8 +172,16 @@ export function SpaceOverview() {
                       >Get link</DropdownMenuItem>
                     
                       <DropdownMenuItem
-                      onSelect={() => {
-                        openDeleteModal(item,deleteSpace)
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openDeleteModal({
+                          name : item.name,
+                          id : item.id
+                        }, deleteSpace, {
+                          entityType : "space",
+                          labelText : "Delete Space",
+                          queryKeyToInvalidate : ["space","overview"]
+                        })
                       }}
                       >
                         Delete Space
