@@ -9,30 +9,12 @@ import {
 } from "@tanstack/react-query";
 import { TestimonialsList } from "@/components/testimonials-space/testimonials-list";
 import { getTestimonials, isSpaceValid } from "@/lib/services/spaceMetrics";
-import { Button } from "@/components/ui/button";
-import { AboutOverview } from "@/components/testimonials-space/overview";
+
 import { GlobalModal } from "@/components/use-dialog";
 import { SpaceSidebar } from "@/components/testimonials-space/sidebar";
+import { fetchTextTestimonials } from "@/lib/services/testimonials";
 
-// async function isSpaceValid(spaceSlug: string, userId: string) {
-//   return await prisma.space.findUnique({
-//     where: {
-//       userId: userId,
-//       slug: spaceSlug
-//     }
-//   });
-// }
 
-// async function getTestimonials(spaceId: string) {
-//   return await prisma.testimonials.findMany({
-//     where: {
-//       spaceId: spaceId
-//     },
-//     orderBy: {
-//       createdAt: 'desc'
-//     }
-//   });
-// }
 
 export default async function SpacePage({
   params,
@@ -49,10 +31,52 @@ export default async function SpacePage({
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["testimonials", "space", space.slug],
-    queryFn: () => getTestimonials(space.id),
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["testimonials", "space", space.slug],
+  //   queryFn: () => getTestimonials(space.id),
+  // });
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey : ["testimonials","space", "text",space.slug],
+    queryFn : async ({pageParam = null}) =>  {
+
+      const res = await fetchTextTestimonials({
+        limit : 10,
+        cursor : pageParam,
+        spaceId : space.id,
+        type : "TEXT"
+      })
+      return {
+        items: res.data?.items,
+        nextCursor: res.data?.nextCursor,
+        hasNextPage: res.data?.hasNextPage,
+        isExhausted : res.data?.isExhausted
+      };
+    },
+    initialPageParam: null,
+    getNextPageParam : (lastPage:any) => lastPage.nextCursor
+  })
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey : ["testimonials","space", "video",space.slug],
+    queryFn : async ({pageParam = null}) =>  {
+
+      const res = await fetchTextTestimonials({
+        limit : 10,
+        cursor : pageParam,
+        spaceId : space.id,
+        type : "VIDEO"
+      })
+      return {
+        items: res.data?.items,
+        nextCursor: res.data?.nextCursor,
+        hasNextPage: res.data?.hasNextPage,
+        isExhausted : res.data?.isExhausted
+      };
+    },
+    initialPageParam: null,
+    getNextPageParam : (lastPage:any) => lastPage.nextCursor
+  })
 
   return (
     <div className="pt-10 space-y-10">
@@ -65,7 +89,7 @@ export default async function SpacePage({
           
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Suspense fallback={<p>Loading testimonials...</p>}>
-          <TestimonialsList spaceSlug={space.slug} />
+          <TestimonialsList spaceSlug={space.slug} spaceId = {space.id}/>
         </Suspense>
         <GlobalModal/>
       </HydrationBoundary>
