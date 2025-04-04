@@ -1,6 +1,6 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useVideoTestimonials } from "@/lib/hooks/useVideoTestimonials";
 
 export function VideoTestimonials({
   spaceSlug,
@@ -9,29 +9,9 @@ export function VideoTestimonials({
   spaceSlug: string;
   
 }) {
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["testimonials", "space", "video",spaceSlug],
-    queryFn: async ({ pageParam = null }) => {
-      const res = await fetch(`/api/space/${spaceSlug}/testimonials/text?type=VIDEO&cursor=${pageParam || ""}`);
-      const data = await res.json();
 
-      return {
-        items: data.data.items,
-        nextCursor: data.data.nextCursor,
-        hasNextPage: data.data.hasNextPage,
-      };
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage: any) => lastPage.nextCursor,
-  });
 
+  const {isLoading,data,fetchNextPage,hasNextPage,isFetchingNextPage,status} = useVideoTestimonials(spaceSlug)
   if (isLoading) return <div>Loading...</div>;
 
   if (status === "error") return <div>Error loading testimonials</div>;

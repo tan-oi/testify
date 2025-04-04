@@ -1,6 +1,6 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useTextTestimonials } from "@/lib/hooks/useTextTestimonial";
 
 export function TextTestimonials({
   spaceSlug,
@@ -9,37 +9,24 @@ export function TextTestimonials({
   spaceSlug: string;
   
 }) {
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["testimonials", "space", "text",spaceSlug],
-  queryFn: async ({ pageParam = null }) => {
-      const res = await fetch(`/api/space/${spaceSlug}/testimonials/text?type=TEXT&cursor=${pageParam || ""}`);
-      const data = await res.json();
 
-      return {
-        items: data.data.items,
-        nextCursor: data.data.nextCursor,
-        hasNextPage: data.data.hasNextPage,
-      };
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage: any) => lastPage.nextCursor,
-  });
+  const {data,isLoading, status, hasNextPage, isFetchingNextPage, fetchNextPage} = useTextTestimonials(spaceSlug)
 
   if (isLoading) return <div>Loading...</div>;
 
   if (status === "error") return <div>Error loading testimonials</div>;
   return (
     <>
-      <p>All testimonials</p>
+      <p>Text testimonials</p>
       {hasNextPage ? `yes ${hasNextPage}` : "no"}
       {console.log(data)}
+
+    <div className="flex gap-4" >
+
+
+   
+    
+    </div>
 
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>

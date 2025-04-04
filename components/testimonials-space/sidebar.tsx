@@ -3,7 +3,7 @@ import { sidebarData } from "@/lib/constant";
 export function SpaceSidebar() {
   return (
     <>
-      <div className="md:h-[calc(85vh-100px)] my-5 px-2 flex flex-col">
+      <div className="my-5 px-2 flex flex-col w-full">
         <div className="px-4 overflow-y-scroll no-scrollbar flex flex-col gap-6">
 
         {sidebarData.map((section, sectionIdx) =>
