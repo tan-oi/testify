@@ -24,6 +24,7 @@ body {
     --primary: 229 100% 62%;
     --primary-foreground: 0 0% 100%;
     --secondary: 229 20% 90%;
+    --sidebar : 229 20% 90%
     --secondary-foreground: 229 20% 30%;
     --accent: 229 28% 85%;
     --accent-foreground: 229 28% 25%;
@@ -47,13 +48,15 @@ body {
     --muted-foreground: 229 10% 63%;
     --popover: 229 41% 5%;
     --popover-foreground: 0 0% 100%;
-    --card: 229 41% 5%;
+    /* --card: 229 41% 5%; */
+    --card : 229 23%, 17%
     --card-foreground: 0 0% 100%;
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --primary: 229 100% 62%;
     --primary-foreground: 0 0% 100%;
     --secondary: 229 14% 8%;
+    --sidebar : 229 23% 14%
     --secondary-foreground: 229 14% 68%;
     --accent: 229 23% 17%;
     --accent-foreground: 229 23% 77%;

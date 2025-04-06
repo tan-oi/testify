@@ -1,7 +1,8 @@
 "use client";
 
 import { useTextTestimonials } from "@/lib/hooks/useTextTestimonial";
-
+import {EachTestimonial} from "../each-testimonial"
+import { Testimonials } from "@prisma/client";
 export function TextTestimonials({
   spaceSlug,
   
@@ -17,16 +18,26 @@ export function TextTestimonials({
   if (status === "error") return <div>Error loading testimonials</div>;
   return (
     <>
-      <p>Text testimonials</p>
-      {hasNextPage ? `yes ${hasNextPage}` : "no"}
-      {console.log(data)}
-
-    <div className="flex gap-4" >
-
-
-   
     
-    </div>
+
+
+
+
+    {
+      data?.pages.map((items,i) => (
+        <div className="grid md:grid-cols-2 gap-4" key={i}>
+            {
+              items.items.map((obj: Testimonials) => (
+                  <div key={obj.id}>
+                   <EachTestimonial {...obj} />
+                    </div>
+              ))
+            }
+        </div>
+      ))
+    }
+    
+   
 
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>

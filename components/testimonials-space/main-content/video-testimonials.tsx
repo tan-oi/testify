@@ -1,6 +1,8 @@
 "use client";
 
 import { useVideoTestimonials } from "@/lib/hooks/useVideoTestimonials";
+import { EachTestimonial } from "../each-testimonial";
+import { Testimonials } from "@prisma/client";
 
 export function VideoTestimonials({
   spaceSlug,
@@ -17,9 +19,24 @@ export function VideoTestimonials({
   if (status === "error") return <div>Error loading testimonials</div>;
   return (
     <>
-      <p>Video testimonials</p>
-      {hasNextPage ? `yes ${hasNextPage}` : "no"}
-      {console.log(data)}
+   <div>
+
+   
+    {
+      data?.pages.map((items,i) => (
+        <div className="grid md:grid-cols-2 gap-4" key={i}>
+            {
+              items.items.length === 0 ? "not found" : 
+              items.items.map((obj: Testimonials) => (
+                  <div key={obj.id}>
+                   <EachTestimonial {...obj} />
+                    </div>
+              ))
+            }
+        </div>
+      ))
+    }
+    </div>
 
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>

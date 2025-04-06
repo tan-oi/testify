@@ -81,7 +81,7 @@ export default async function SpacePage({
   return (
     <div className="pt-10 space-y-10">
       <div className="flex gap-8">
-        <div className="rounded-2xl bg-secondary 
+        <div className="rounded-2xl bg-sidebar 
         border border-slate-800 md:w-[250px] flex-shrink-0 sm:h-[calc(85vh-100px)] ">
             <SpaceSidebar/>
         </div>
