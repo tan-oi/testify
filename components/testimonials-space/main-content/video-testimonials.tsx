@@ -24,7 +24,7 @@ export function VideoTestimonials({
    
     {
       data?.pages.map((items,i) => (
-        <div className="grid md:grid-cols-2 gap-4" key={i}>
+        <div className="grid h-full md:grid-cols-2 gap-4" key={i}>
             {
               items.items.length === 0 ? "not found" : 
               items.items.map((obj: Testimonials) => (

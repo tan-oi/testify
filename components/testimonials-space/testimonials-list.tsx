@@ -16,16 +16,11 @@ export function TestimonialsList({ spaceSlug,spaceId }: { spaceSlug: string,spac
   if(currentView === "liked") return <p>ked is rendering</p>
   return (
     <>
+    <div className="pb-6">
+      
    <TextTestimonials spaceSlug={spaceSlug}/>  
-      {/* <div className="grid lg:grid-cols-3">
-        <div className="rounded-2xl bg-secondary">
-            <SpaceSidebar/>
-  
-        </div>
-        <div className="cols-span-2">
-          
-        </div>
-        </div> */}
+    </div>
+     
 
        
     </>

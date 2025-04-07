@@ -80,10 +80,13 @@ export default async function SpacePage({
 
   return (
     <div className="pt-10 space-y-10">
-      <div className="flex gap-8">
-        <div className="rounded-2xl bg-sidebar 
-        border border-slate-800 md:w-[250px] flex-shrink-0 sm:h-[calc(85vh-100px)] ">
+      <div className="flex gap-8 relative">
+        <div className="sm:h-[calc(85vh-100px)] sticky top-24 self-start">
+          <div className="h-full rounded-2xl bg-sidebar 
+        border border-slate-800 md:w-[250px] flex-shrink-0 ">
+            
             <SpaceSidebar/>
+          </div>
         </div>
         <div className="w-full">
           
