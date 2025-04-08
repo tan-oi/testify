@@ -13,6 +13,7 @@ import { getTestimonials, isSpaceValid } from "@/lib/services/spaceMetrics";
 import { GlobalModal } from "@/components/use-dialog";
 import { SpaceSidebar } from "@/components/testimonials-space/sidebar";
 import { fetchTextTestimonials } from "@/lib/services/testimonials";
+import { EmbedTestimonialOverlay } from "@/components/embed-testimonial-overlay";
 
 
 
@@ -81,7 +82,7 @@ export default async function SpacePage({
   return (
     <div className="pt-10 space-y-10">
       <div className="flex gap-8 relative">
-        <div className="sm:h-[calc(85vh-100px)] sticky top-24 self-start">
+        <div className="sm:h-[calc(85vh-100px)] sticky top-24 self-start hidden lg:block">
           <div className="h-full rounded-2xl bg-sidebar 
         border border-slate-800 md:w-[250px] flex-shrink-0 ">
             
@@ -95,6 +96,7 @@ export default async function SpacePage({
           <TestimonialsList spaceSlug={space.slug} spaceId = {space.id}/>
         </Suspense>
         <GlobalModal/>
+        <EmbedTestimonialOverlay/>
       </HydrationBoundary>
         </div>
      </div>
