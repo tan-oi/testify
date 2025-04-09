@@ -24,7 +24,7 @@ export function EmbedTestimonialOverlay() {
 
     return (
       <Drawer open={open} onOpenChange={close}>
-        <DrawerContent className="h-[90vh] max-h-[90vh] mx-6 no-scrollbar overflow-y-scroll mb-4 px-4">
+        <DrawerContent className="h-[90vh] max-h-[90vh] mx-6 no-scrollbar overflow-y-auto mb-4 px-4">
           <EditSingleTestimonial data={passedData}/>
         </DrawerContent>
       </Drawer>

@@ -1,35 +1,52 @@
-import { prisma } from "@/lib/prisma";
 import { Testimonials } from "@prisma/client";
+import { useState } from "react";
+import { EditEmbedPreview } from "./edit-preview";
+import { useStyleStore } from "@/lib/store/embedStore";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import { EditBorderOption, EditDesignOption } from "./edit-options";
 
+export function EditSingleTestimonial({ data }: Partial<Testimonials>) {
+  const { styles, updateContentStyle, updateWrapperStyle } = useStyleStore();
+  console.log(data);
 
-   export async function EditSingleTestimonial({
-    data
-} : Partial<Testimonials>) {
-  const getTestimonial = await prisma.testimonials.findUnique({
-    where : {
-      id: data.id 
-    },
-    select : {
-      content : true,
-      senderName : true
-    }
+  const handleCardStyleChange = (styleKey: keyof typeof styles.content, value: string) => {
+    updateContentStyle(styleKey, value);
+  };
 
-  })
-    console.log(data);
-    return (
-      <>
-      <p>edit rendering </p> 
+  const handleWrapperChanges = (styleKey : keyof typeof styles.wrapper, value : string) => {
+    updateWrapperStyle(styleKey,value)
+  }
+  return (
+    <div className="py-4">
+      <h2 className="text-center font-bold">Edit Your Testimonial to look exactly like you want</h2>
 
-      <iframe
-        src="http://localhost:3000/embeds/testimonial/cm91pk31a0007ufsgjtg6n7wk"
-        width="100%"
-        height="150"
-        frameBorder="0"
-        loading="lazy"
-      ></iframe> 
-      </>
+      <Tabs defaultValue="design">
+        <TabsList className="grid grid-cols-4 gap-4 mb-4">
+            <TabsTrigger value="design" className="mr-4">Design</TabsTrigger>
+            <TabsTrigger value="border">Border</TabsTrigger>
+            <TabsTrigger value="font">Font</TabsTrigger>
+            <TabsTrigger value="background">Background</TabsTrigger>
+        </TabsList>
 
+        <TabsContent value="design">
+        <EditDesignOption/>
+        </TabsContent>
 
-      
-    )
+        <TabsContent value="border">
+          <EditBorderOption/>
+        </TabsContent>
+      </Tabs>
+     
+      <h3>Live Preview</h3>
+      <EditEmbedPreview content={data?.content} senderName={data?.senderName}/>
+
+      <h3>Embed Code</h3>
+      <textarea readOnly style={{ width: "100%", height: "200px" }} />
+    </div>
+  );
 }
