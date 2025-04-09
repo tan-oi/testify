@@ -60,8 +60,37 @@ export interface CachedSpaceData {
 
 
 import { SpaceCustomization } from "@prisma/client";
+import { cardStyles, fontSizeLabels, wrapperStyles } from "./constant";
 
 export interface TestimonialProps {
   getFormDetails: SpaceCustomization | null;
 }
 
+
+
+export type FontSizeKey = keyof typeof fontSizeLabels
+
+export interface embedStore {
+  open : boolean;
+  openDialog : (type : "single" | "multiple", data : Record <string,any>) => void;
+  close : () => void;
+  type : "single" | "multiple",
+  overlayData : Record<string,any>| null
+
+
+}
+
+
+
+export type WrapperStyleKeys = keyof typeof wrapperStyles;
+export type CardStyleKeys = keyof typeof cardStyles;
+
+export type StyleState = {
+  styles: {
+    wrapper: typeof wrapperStyles;
+    content: typeof cardStyles;
+  };
+  updateWrapperStyle: (key: WrapperStyleKeys, value: string) => void;
+  updateContentStyle: (key: CardStyleKeys, value: string|boolean) => void;
+  resetStyles: () => void;
+};

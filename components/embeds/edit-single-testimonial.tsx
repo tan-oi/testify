@@ -8,19 +8,15 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { EditBorderOption, EditDesignOption } from "./edit-options";
+import { EditBackgroundOption, EditBorderOption, EditDesignOption, EditFontOption } from "./edit-options";
 
 export function EditSingleTestimonial({ data }: Partial<Testimonials>) {
   const { styles, updateContentStyle, updateWrapperStyle } = useStyleStore();
   console.log(data);
 
-  const handleCardStyleChange = (styleKey: keyof typeof styles.content, value: string) => {
-    updateContentStyle(styleKey, value);
-  };
+  
 
-  const handleWrapperChanges = (styleKey : keyof typeof styles.wrapper, value : string) => {
-    updateWrapperStyle(styleKey,value)
-  }
+  
   return (
     <div className="py-4">
       <h2 className="text-center font-bold">Edit Your Testimonial to look exactly like you want</h2>
@@ -39,6 +35,14 @@ export function EditSingleTestimonial({ data }: Partial<Testimonials>) {
 
         <TabsContent value="border">
           <EditBorderOption/>
+        </TabsContent>
+
+        <TabsContent value="background">
+          <EditBackgroundOption/>
+        </TabsContent>
+
+        <TabsContent value="font">
+            <EditFontOption/>
         </TabsContent>
       </Tabs>
      

@@ -26,6 +26,7 @@ export function EditEmbedPreview({
           paddingInline : "10px",
           textAlign: styles.content.textAlign,
           fontWeight: styles.content.fontBold ? 700 : undefined,
+          fontSize : styles.content.fontSize,
           background: styles.content.backgroundColor,
           color: styles.content.textColor,
           border: styles.content.border ? 
