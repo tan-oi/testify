@@ -36,9 +36,9 @@ export function EditEmbedPreview({
           boxShadow: styles.content.boxShadow,
         }}
       >
-        <blockquote>
+        <p>
           {content}
-        </blockquote>
+        </p>
         <p>ok ok ok ok</p>
         <footer>— {senderName}</footer>
       </div>

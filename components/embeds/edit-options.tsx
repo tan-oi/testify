@@ -12,9 +12,9 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
+  SelectGroup, SelectItem
 } from "../ui/select";
-import { SelectGroup, SelectItem } from "@radix-ui/react-select";
-import { alignOptions,colorPalette,gradientPalette,fontSizeLabels } from "@/lib/constant";
+import { alignOptions,colorPalette,gradientPalette,fontSizeLabels, fontOptions } from "@/lib/constant";
 import { FontSizeKey } from "@/lib/types";
 
 
@@ -113,21 +113,41 @@ export function EditBorderOption() {
 
       <div>
         <h2>Border Color</h2>
-        <div className="flex gap-2">
-          {colorPalette.map((color) => (
-            <button
-              key={color}
-              className={`h-6 w-6 border-2 transition-transform hover:scale-110 ${
-                color === styles.content.borderColor
-                  ? "border-gray-800 dark:border-white scale-110"
-                  : "border-transparent"
-              }`}
-              style={{ backgroundColor: color }}
-              onClick={() => border && updateContentStyle("borderColor", color)}
-              aria-label={`Select color ${color}`}
-            />
-          ))}
-        </div>
+        <div className="mb-4">
+        
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {colorPalette.slice(0, 6).map((color) => (
+                    <button
+                      key={color}
+                      className={`h-8 w-8 rounded-md border-2 ${
+                        styles.content.borderColor === color
+                          ? `border-black`
+                          : `border-gray-200`
+                      }`}
+                      style={{ background: color }}
+                      onClick={() =>
+                        updateContentStyle("borderColor", color)
+                      }
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-2 items-center">
+                  {colorPalette.slice(6, 12).map((color) => (
+                    <button
+                      key={color}
+                      className={`h-8 w-8 rounded-md border-2 ${
+                        styles.content.borderColor === color
+                          ? `border-black`
+                          : `border-gray-200`
+                      }`}
+                      style={{ background: color }}
+                      onClick={() =>
+                        updateContentStyle("borderColor", color)
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
       </div>
     </div>
   );
@@ -274,7 +294,7 @@ export function EditBackgroundOption() {
                     <button
                       key={color}
                       className={`h-8 w-8 rounded-md border-2 ${
-                        styles.wrapper.backgroundColor === color
+                        styles.content.backgroundColor === color
                           ? `border-black`
                           : `border-gray-200`
                       }`}
@@ -290,7 +310,7 @@ export function EditBackgroundOption() {
                     <button
                       key={color}
                       className={`h-8 w-8 rounded-md border-2 ${
-                        styles.wrapper.backgroundColor === color
+                        styles.content.backgroundColor === color
                           ? `border-black`
                           : `border-gray-200`
                       }`}
@@ -315,9 +335,11 @@ export function EditFontOption() {
   const handleValueChange = (value: string) => {
     updateContentStyle("fontSize", value);
   };
+
+  const fontvalue = fontOptions.find((items) => (items.value === styles.content.fontFamily))
   return (
     <>
-      <div>
+      <div className="flex flex-col gap-4">
         <div>
           <p className="text-md">Font size</p>
           <Select
@@ -341,6 +363,74 @@ export function EditFontOption() {
                 <SelectItem value="20px"
                 className="hover:bg-white/5 rounded-md p-2">Extra large</SelectItem>
               </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="mb-4">
+          <h2 className="text-base">Text color</h2>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {colorPalette.slice(0, 6).map((color) => (
+                    <button
+                      key={color}
+                      className={`h-8 w-8 rounded-md border-2 ${
+                        styles.content.textColor === color
+                          ? `border-black`
+                          : `border-gray-200`
+                      }`}
+                      style={{ background: color }}
+                      onClick={() =>
+                        updateContentStyle("textColor", color)
+                      }
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-2 items-center">
+                  {colorPalette.slice(6, 12).map((color) => (
+                    <button
+                      key={color}
+                      className={`h-8 w-8 rounded-md border-2 ${
+                        styles.content.textColor === color
+                          ? `border-black`
+                          : `border-gray-200`
+                      }`}
+                      style={{ background: color }}
+                      onClick={() =>
+                        updateContentStyle("textColor", color)
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+
+
+
+
+              <div>
+          <p className="text-md">Fonts</p>
+          <Select
+            value={styles.content.fontFamily}
+            onValueChange={(value) => {
+                updateContentStyle("fontFamily",value);
+            }}
+          >
+            <SelectTrigger className="w-[350px]">
+              <SelectValue>
+                {fontvalue?.label}
+               </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              
+                {
+                  fontOptions.map((item,i)=> (
+                      <SelectItem key={item.label}
+                      value={item.value}
+                      style={{fontFamily : item.value}}>
+                        {item.label}
+                      </SelectItem>
+                  ))
+                }
+           
             </SelectContent>
           </Select>
         </div>

@@ -50,7 +50,10 @@ export const colorPalette = [
   "#d35400",
   "#27ae60",
   "#8e44ad",
+  "#000000"
 ];
+
+
 
 export const gradientPalette = [
   "linear-gradient(to right, #3498db, #2ecc71)",
@@ -88,7 +91,7 @@ export const cardStyles = {
   borderWidth: "0px",
   borderRadius: "0px",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-  fontFamily: "'Segoe UI', sans-serif",
+  fontFamily: "'Arial', sans-serif",
   textColor: "#000000",
   starColor: "#FCB900",
   textAlign: 'center' as 'left' | 'right' | 'center' | 'justify' | undefined,
@@ -96,3 +99,24 @@ export const cardStyles = {
   border : true,
   fontSize : "16px",
 };
+
+
+export const fontOptions = [
+  { label: "Arial", value: "'Arial', sans-serif" },
+  { label: "Helvetica", value: "'Helvetica', sans-serif" },
+  { label: "Verdana", value: "'Verdana', sans-serif" },
+  { label: "Tahoma", value: "'Tahoma', sans-serif" },
+  { label: "Trebuchet MS", value: "'Trebuchet MS', sans-serif" },
+  { label: "Segoe UI", value: "'Segoe UI', sans-serif" },
+  { label: "Roboto", value: "'Roboto', sans-serif" },
+  { label: "Gill Sans", value: "'Gill Sans', sans-serif" },
+  { label: "Comic Sans MS", value: "'Comic Sans MS', cursive, sans-serif" },
+  { label: "Impact", value: "'Impact', Charcoal, sans-serif" },
+  { label: "Times New Roman", value: "'Times New Roman', Times, serif" },
+  { label: "Georgia", value: "'Georgia', serif" },
+  { label: "Palatino Linotype", value: "'Palatino Linotype', 'Book Antiqua', Palatino, serif" },
+  { label: "Cambria", value: "'Cambria', serif" },
+  { label: "Courier New", value: "'Courier New', Courier, monospace" },
+  { label: "Lucida Console", value: "'Lucida Console', Monaco, monospace" },
+  { label: "Monaco", value: "'Monaco', monospace" }
+];
