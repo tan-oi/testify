@@ -23,9 +23,11 @@ export async function GET(
     select: {
       content: true,
       senderName: true,
+      videoUrl : true
     },
   });
 
+    console.log(getTestimonial);
 
   if (!getTestimonial) {
     return NextResponse.json(
@@ -34,75 +36,27 @@ export async function GET(
     );
   }
 
-  // const html = `  
-  //     <!DOCTYPE html>
-  //     <html>
-  //     <head>
-  //       <meta charset="utf-8">
-  //       <meta name="viewport" content="width=device-width, initial-scale=1">
-  //       <style>
-  //         body {
-  //           margin: 0;
-  //           padding: 16px;
-  //           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  //           background-color: #f42a2a;
-  //         }
-  //         .testimonial {
-  //           border-radius: 18px;
-  //           padding: 16px;
-  //           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  //           background-color: #ffffff;
-  //         }
-  //         .quote {
-  //           font-size: 16px;
-  //           line-height: 1.5;
-  //           margin-bottom: 12px;
-  //         }
-  //         .author {
-  //           display: flex;
-  //           align-items: center;
-  //         }
-  //         .author-image {
-  //           width: 40px;
-  //           height: 40px;
-  //           border-radius: 50%;
-  //           margin-right: 12px;
-  //           object-fit: cover;
-  //         }
-  //         .author-name {
-  //           font-weight: bold;
-  //         }
-  //         .author-title {
-  //           opacity: 0.7;
-  //           font-size: 14px;
-  //         }
-  //       </style>
-  //       <script>
-  //         // Auto-resize script to communicate height to parent page
-  //         window.addEventListener('load', function() {
-  //           const height = document.body.scrollHeight;
-  //           window.parent.postMessage({ 
-  //             type: 'testimonial-height', 
-  //             height: height 
-  //           }, '*');
-  //         });
-  //       </script>
-  //     </head>
-  //     <body>
-  //       <div class="testimonial">
-  //         <div>
-  //         <div>
-  //         ${getTestimonial.content}
-  //         </div>
-  //           ${getTestimonial.senderName} 
-  //         </div>
+  
+  if(!getTestimonial?.content) {
+    const url = getTestimonial.videoUrl;
+    const newHtml = `
+    <div style="
+      width: 350px;
+      max-width: 100%
+    ">
+      <video src="${url}" controls autoplay width="100%" height="auto">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    `;
+    
+    return new NextResponse(newHtml, {
+      headers: {
+        "Content-Type": "text/html"
+      }
+    });
+  }
 
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </body>
-  //     </html>
-  //   `;
   const html = generateHTML({
     content: getTestimonial.content,
     senderName: getTestimonial.senderName,

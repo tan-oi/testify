@@ -1,5 +1,4 @@
 import { Testimonials } from "@prisma/client";
-import { useState } from "react";
 import { EditEmbedPreview } from "./edit-preview";
 import { useStyleStore } from "@/lib/store/embedStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,7 +11,7 @@ import {
 import { Button } from "../ui/button";
 
 export function EditSingleTestimonial({ data }: Partial<Testimonials>) {
-  const { styles, updateContentStyle, updateWrapperStyle } = useStyleStore();
+
   console.log(data);
 
   const generateEmbedCode = (testimonialId: string): string => {

@@ -18,7 +18,15 @@ export function TextTestimonials({ spaceSlug }: { spaceSlug: string }) {
   if (isLoading) return <div>Loading...</div>;
   if (status === "error") return <div>Error loading testimonials</div>;
 
+
+
   const allTestimonials = data?.pages.flatMap((page) => page.items) || [];
+
+  if(!allTestimonials.length) {
+    return <div>
+      No text sadly
+    </div>
+  }
 
   const groupedTestimonials = [];
   for (let i = 0; i < allTestimonials.length; i += 2) {

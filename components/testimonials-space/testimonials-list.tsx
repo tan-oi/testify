@@ -2,8 +2,6 @@
 import { contentStore } from "@/lib/store/contentStore";
 import { TextTestimonials } from "./main-content/text-testimonials";
 import { VideoTestimonials } from "./main-content/video-testimonials";
-import { useQueryClient } from "@tanstack/react-query";
-import { Button } from "../ui/button";
 import { AllTestimonials } from "./main-content/all-testimonials";
 
 export function TestimonialsList({ spaceSlug,spaceId }: { spaceSlug: string,spaceId:string }) { 
