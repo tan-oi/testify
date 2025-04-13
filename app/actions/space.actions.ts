@@ -3,7 +3,6 @@ import { auth } from "@/auth";
 import { generateUniqueSlug } from "@/lib/generateSlug";
 import { prisma } from "@/lib/prisma";
 import { fullSchema } from "@/lib/schema";
-import { DeleteResponse } from "@/lib/store/spaceStore";
 import { SpaceCustomization } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -160,7 +159,7 @@ export async function editSpace(data: Partial<SpaceCustomization>) {
 export async function deleteSpace(data : {
   name : string,
   id : string
-}): Promise<DeleteResponse> {
+}) {
   const session = await auth();
   if(!session || !session?.user) return redirect('/auth');
   try {

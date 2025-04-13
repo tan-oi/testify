@@ -43,7 +43,7 @@ export function TextTestimonials({ spaceSlug }: { spaceSlug: string }) {
           >
             {pair.map((testimonial: Testimonials) => (
               <div key={testimonial.id} className="h-full">
-                <EachTestimonial {...testimonial} />
+                <EachTestimonial {...testimonial} spaceSlug={spaceSlug} />
               </div>
             ))}
           </div>

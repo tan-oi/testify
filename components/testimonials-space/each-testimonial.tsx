@@ -8,10 +8,21 @@ import {
 import { useState } from "react";
 import { Testimonials } from "@prisma/client";
 import { Badge } from "../ui/badge";
-import { ChevronDown, ChevronUp, Mail, Star, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Heart,
+  Mail,
+  Star,
+  ThumbsUp,
+  X,
+} from "lucide-react";
 import { Button } from "../ui/button";
 
 import { useEmbedStore } from "@/lib/store/embedStore";
+import { useLikeTestimonial } from "@/lib/hooks/useLikeTestimonial";
+import { useDeleteModal } from "@/lib/store/spaceStore";
+import { deleteTestimonial } from "@/app/actions/testimonials.actions";
 
 export function EachTestimonial({
   id,
@@ -23,10 +34,23 @@ export function EachTestimonial({
   rating = null,
   consentDisplay,
   createdAt,
-}: Partial<Testimonials>) {
+  isLiked,
+  spaceSlug,
+}: Partial<Testimonials> & { spaceSlug?: string }) {
+ 
+  const likeTestimonial = useLikeTestimonial(spaceSlug as string);
+  const handleLike = () => {
+    likeTestimonial.mutate({
+      id: id as string,
+      isLiked: !isLiked,
+      type: type as string,
+    });
+  };
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const openDialog = useEmbedStore((state) => state.openDialog);
+
   const formatDate = (dateInput: Date | string | null | undefined): string => {
     if (!dateInput) return "";
 
@@ -122,6 +146,23 @@ export function EachTestimonial({
         </CardContent>
 
         <CardFooter className="flex flex-col mt-auto p-2">
+             {/* need to make sure we prevent any direct like invocation in the api + add rate limiting */}   
+          {consentDisplay && (
+            <div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`flex items-center gap-1 ${
+                  isLiked ? "text-red-500" : "text-white"
+                }`}
+                onClick={handleLike}
+                disabled={likeTestimonial.isPending}
+              >
+                <Heart className={`w-4 h-4 ${isLiked ? "fill-red-500" : ""}`} />
+              </Button>
+            </div>
+          )}
+  
           {isExpanded && (
             <div className="flex w-full gap-2 mb-2">
               <Button
@@ -132,7 +173,7 @@ export function EachTestimonial({
               </Button>
               <Button
                 className="rounded-xl w-fit bg-transparent text-white"
-                onClick={() =>
+                onClick={() => 
                   openDialog("single", {
                     id: id,
                     senderEmail: senderEmail,

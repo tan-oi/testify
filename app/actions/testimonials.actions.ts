@@ -1,7 +1,9 @@
 "use server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getTextTestimonialsSchema } from "@/lib/schema";
 import { Testimonials } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export async function submitTextTestimonial(
   values: Partial<Testimonials> & {
@@ -87,4 +89,55 @@ export async function submitVideoTestimonial(values : Partial<Testimonials>) {
     }  
   
   }
+}
+
+
+export async function deleteTestimonial(data : {
+  id : string;
+  name : string;
+}) {
+
+    try {
+      const session = await auth();
+      if(!session|| !session?.user) return redirect("/auth");
+
+      const isTestimonialValid = await prisma.testimonials.findUnique({
+        where : {
+          id : data.id
+        }
+      });
+
+      if(!isTestimonialValid) {
+        return {
+          success : false,
+          error : "Testimonial does'n exist, refresh!"
+        }
+      }
+
+      const deleteValidTestimonial = await prisma.testimonials.delete({
+        where : {
+          id : data.id
+        }
+      })
+
+      if(deleteValidTestimonial) {
+        return {
+          success :true,
+          message :"Deleted successfully."
+        }
+      }
+      else {
+        return {
+          success : false,
+          message :"please try again"
+        }
+      }
+
+    }
+    catch(err) {
+          return {
+            success : false,
+            error : "Something went wrong"
+          }
+    }
 }

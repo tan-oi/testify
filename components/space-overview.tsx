@@ -172,17 +172,22 @@ export function SpaceOverview() {
                       >Get link</DropdownMenuItem>
                     
                       <DropdownMenuItem
-                      onClick={(e) => {
+                      onClick={
+                        (e) => 
+                        {
                         e.preventDefault();
-                        openDeleteModal({
+                        openDeleteModal(
+                          {
                           name : item.name,
                           id : item.id
-                        }, deleteSpace, {
+                        }, deleteSpace,
+                        {
                           entityType : "space",
-                          labelText : "Delete Space",
-                          queryKeyToInvalidate : ["space","overview"]
+                          labelText : "Delete space"
                         })
-                      }}
+                    }
+                  
+                  }
                       >
                         Delete Space
                         </DropdownMenuItem>

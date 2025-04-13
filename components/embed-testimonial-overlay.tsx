@@ -20,6 +20,7 @@ export function EmbedTestimonialOverlay() {
     resetStyles();
   };
 
+  console.log(passedData);
 
   if (passedData?.videoUrl && type === "single" && open) {
     return (
@@ -42,18 +43,18 @@ export function EmbedTestimonialOverlay() {
             <div className="mt-2 p-2 bg-secondary rounded flex items-center">
               <input
                 type="text"
-                value={`${window.location.origin}/embeds/testimonial/${passedData.id}?video`}
+                value={`http:locahost:3000/embeds/testimonial/${passedData.id}?video`}
                 className="bg-transparent flex-1 border-none outline-none text-sm"
                 readOnly
               />
-              <button 
+              {/* <button 
                 className="text-xs px-2 py-1 bg-primary text-primary-foreground rounded"
                 onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/embeds/testimonial/${passedData.id}?video`);
                 }}
               >
                 Copy
-              </button>
+              </button> */}
             </div>
           </div>
         </DialogContent>
@@ -66,7 +67,7 @@ export function EmbedTestimonialOverlay() {
     <Drawer open={open} onOpenChange={handleClose}>
      <DrawerContent className="max-h-[90vh] mx-6 mb-4 px-4">
   <div className="overflow-y-auto max-h-[calc(90vh-2rem)] py-4">
-    <EditSingleTestimonial data={passedData} />
+    <EditSingleTestimonial {...passedData} />
   </div>
 </DrawerContent>
     </Drawer>

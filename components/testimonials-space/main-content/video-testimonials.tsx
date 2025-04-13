@@ -40,7 +40,7 @@ for (let i = 0; i < allTestimonials.length; i += 2) {
           >
             {pair.map((testimonial: Testimonials) => (
               <div key={testimonial.id} className="h-full">
-                <EachTestimonial {...testimonial} />
+                <EachTestimonial {...testimonial} spaceSlug={spaceSlug}/>
               </div>
             ))}
           </div>

@@ -84,7 +84,7 @@ model Testimonials {
   videoUrl String?
 
   consentDisplay Boolean @default(true)
-
+  isLiked Boolean @default(false)
   spaceId String 
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 

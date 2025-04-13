@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { DeleteModalStore } from "../types";
 
 // const defaultQuestions: Questions[] = [
 //   {
@@ -128,19 +129,13 @@ export const useSpaceModalStore = create<SpaceModalStore>((set) => ({
 }));
 
 
-type DeleteModalStore = {
-  isOpen: boolean;
-  values: any; // Generic type
-  deleteAction: ((data: any) => Promise<void>) | null;
-  openDeleteModal: <T>(data: T, deleteAction: (data: T) => Promise<void>) => void;
-  closeModal: () => void;
-};
 
 export const useDeleteModal = create<DeleteModalStore>((set) => ({
+  metaData : null,
   isOpen: false,
   values: null,
   deleteAction: null,
-  openDeleteModal: (values, deleteAction) =>
-    set({ isOpen: true, values, deleteAction }),
+  openDeleteModal: (values, deleteAction,metaData) =>
+    set({ isOpen: true, values, deleteAction,metaData }),
   closeModal: () => set({ isOpen: false, values: null, deleteAction: null }),
 }));

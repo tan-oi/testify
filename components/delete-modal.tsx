@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useEffect, useId, useState } from "react"
-import { CircleAlertIcon } from "lucide-react"
+import { useId, useState } from "react";
+import { CircleAlertIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -13,50 +13,44 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useDeleteModal } from "@/lib/store/spaceStore"
-import { useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useDeleteModal } from "@/lib/store/spaceStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-
-export  function DeleteModal() {
+export function DeleteModal() {
   const queryClient = useQueryClient();
-  const id = useId()
+  const id = useId();
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
- 
-  const {isOpen,closeModal, deleteAction, values, metaData }  = useDeleteModal();
-   if(!deleteAction) return;
+  const { isOpen, closeModal, deleteAction, values, metaData } =
+    useDeleteModal();
+  if (!deleteAction) return;
 
-   const handleDelete = async () => {
+  const handleDelete = async () => {
     try {
       setLoading(true);
       const result = await deleteAction(values);
-      if(result.success) {
+      if (result.success) {
         queryClient.invalidateQueries({
-          queryKey : ["space","overview"]
-        })
-        toast.success("Space deleted successfully!")
-      }
-      else toast.error("Something went wrong, please try again!")
-    }
-    catch(err) {
+          queryKey: ["space", "overview"],
+        });
+
+        toast.success("Space deleted successfully!");
+      } else toast.error("Something went wrong, please try again!");
+    } catch (err) {
       console.log(err);
       toast.error("Something went wrong!");
-    }
-    finally{
+    } finally {
       setLoading(false);
-      closeModal()
+      closeModal();
     }
-   
-
-  }
+  };
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-     
       <DialogContent>
         <div className="flex flex-col items-center gap-2">
           <div
@@ -70,7 +64,8 @@ export  function DeleteModal() {
               Final confirmation
             </DialogTitle>
             <DialogDescription className="sm:text-center">
-              This action cannot be undone. To confirm, please enter the {`${metaData?.entityType} `} 
+              This action cannot be undone. To confirm, please enter the{" "}
+              {`${metaData?.entityType} `}
               name <span className="text-foreground">{`${values?.name}`}</span>.
             </DialogDescription>
           </DialogHeader>
@@ -89,8 +84,11 @@ export  function DeleteModal() {
           </div>
           <DialogFooter className="max-w-md:space-y-2">
             <DialogClose asChild>
-              <Button type="button" variant="outline" className="flex-1"
-              disabled={loading}
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                disabled={loading}
               >
                 Cancel
               </Button>
@@ -101,11 +99,11 @@ export  function DeleteModal() {
               disabled={inputValue !== values?.name || loading}
               onClick={handleDelete}
             >
-              {!loading? "Delete" : "Deleting"}
+              {!loading ? "Delete" : "Deleting"}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -14,6 +14,7 @@ import { GlobalModal } from "@/components/use-dialog";
 import { SpaceSidebar } from "@/components/testimonials-space/sidebar";
 import { fetchTextTestimonials } from "@/lib/services/testimonials";
 import { EmbedTestimonialOverlay } from "@/components/embed-testimonial-overlay";
+import { DeleteModal } from "@/components/delete-modal";
 
 
 
@@ -31,12 +32,7 @@ export default async function SpacePage({
   if (!space) return notFound();
 
   const queryClient = new QueryClient();
-
-  // await queryClient.prefetchQuery({
-  //   queryKey: ["testimonials", "space", space.slug],
-  //   queryFn: () => getTestimonials(space.id),
-  // });
-
+  
   await queryClient.prefetchInfiniteQuery({
     queryKey : ["testimonials","space", "text",space.slug],
     queryFn : async ({pageParam = null}) =>  {
@@ -97,6 +93,7 @@ export default async function SpacePage({
         </Suspense>
         <GlobalModal/>
         <EmbedTestimonialOverlay/>
+      
       </HydrationBoundary>
         </div>
      </div>
