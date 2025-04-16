@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { getTextTestimonialsSchema } from "@/lib/schema";
 import { Testimonials } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
+import { getTweet } from "react-tweet/api";
 
 export async function submitTextTestimonial(
   values: Partial<Testimonials> & {
@@ -140,4 +142,66 @@ export async function deleteTestimonial(data : {
             error : "Something went wrong"
           }
     }
+}
+
+
+export async function importX(spaceSlug : string, formData : any) {
+  try {
+    const link = formData.get("link");
+
+    console.log(formData);
+    console.log(spaceSlug);
+
+    const findSpace = await prisma.space.findUnique({
+      where : {
+        slug : spaceSlug
+      }
+    })
+
+     if(!findSpace) {
+      return {
+        success : false,
+        error : "Could not find a space"
+      }
+    }
+
+    const res = await getTweet(link);
+    if(!res) return {
+      success : false,
+      error :  "Tweet not found"
+    }
+
+    const message = res.text;
+    const firstName = res.user.name;
+
+    const videos : string[] =[]
+    if(res.video) {
+        videos.push(res.video.variants[res.video.variants.length - 1].src)
+    }
+
+    const makeTestimonial = await prisma.testimonials.create({
+      data : {
+      spaceId : findSpace.id,
+        type : res.video? "VIDEO" : "TEXT",
+        senderName : firstName,
+        content : message,
+        videoUrl : videos[0],
+        consentDisplay : true,
+      }
+    })
+
+   
+    return {
+      success : true,
+      message : "Added!"
+    }
+
+    // })
+  }
+  catch(err) {
+    return { 
+      success : false,
+      error : "Something got wrong"
+    }
+  }
 }
