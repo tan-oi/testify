@@ -1,5 +1,5 @@
-import { Inbox, MessageSquare, Video, Heart } from 'lucide-react';
-import { SidebarElementInterface } from './types';
+
+
 export const sidebarData = [
   {
     Inbox: [
@@ -23,7 +23,20 @@ export const sidebarData = [
         viewName: 'liked',
         icon: "Heart"
       }
-    ]
+    ],
+    Integrations : [
+      {
+        name : "X/Twitter",
+        viewName : "x/twitter",
+        icon : "Twitter"
+      },
+      // {
+      //   name : "LinkedIn",
+      //   viewName : "linkedin",
+      //   icon : "Linkedin"
+      // }
+    ],
+
   }
 ];
 
@@ -120,3 +133,5 @@ export const fontOptions = [
   { label: "Lucida Console", value: "'Lucida Console', Monaco, monospace" },
   { label: "Monaco", value: "'Monaco', monospace" }
 ];
+
+

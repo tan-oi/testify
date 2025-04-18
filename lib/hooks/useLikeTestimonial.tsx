@@ -8,7 +8,7 @@ interface LikeTestimonialParams {
 
 interface TestimonialItem {
   id: string;
-  isLiked?: boolean;  // Ensure you use "isLiked" consistently
+  isLiked?: boolean; 
   [key: string]: any; 
 }
 

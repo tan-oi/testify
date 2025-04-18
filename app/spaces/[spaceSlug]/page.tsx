@@ -6,6 +6,7 @@ import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { TestimonialsList } from "@/components/testimonials-space/testimonials-list";
 import { getTestimonials, isSpaceValid } from "@/lib/services/spaceMetrics";
@@ -14,7 +15,6 @@ import { GlobalModal } from "@/components/use-dialog";
 import { SpaceSidebar } from "@/components/testimonials-space/sidebar";
 import { fetchTextTestimonials } from "@/lib/services/testimonials";
 import { EmbedTestimonialOverlay } from "@/components/embed-testimonial-overlay";
-import { DeleteModal } from "@/components/delete-modal";
 
 
 

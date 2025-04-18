@@ -36,6 +36,7 @@ export async function fetchTextTestimonials({
     where: {
     spaceId : spaceId,
       type: type,
+      source : "MANUAL"
     },
     ...(cursor && {
       skip: 1,
@@ -77,4 +78,33 @@ catch(err) {
         error : "Failed to fetch"
     }
 }
+}
+
+
+export async function fetchImportedTestimonials({
+  spaceId
+} : {
+  spaceId : string
+}){
+  try {
+    const fetchTestimonial = await prisma.testimonials.findMany({
+      where : {
+        spaceId : spaceId,
+        source : "IMPORT"
+      }
+    })
+
+    return {
+      success : true,
+      data : fetchTestimonial,
+      message : "Fetch successful"
+    }
+  }
+
+  catch(err) {
+    return {
+      success : false,
+      error : "Internal server error"
+    }
+  }
 }

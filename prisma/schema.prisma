@@ -76,13 +76,14 @@ model Testimonials {
   id String @id @default(cuid())
   type ContentType @default(TEXT)
   source TestimonialSource @default(MANUAL)
+  importedFrom   ImportType?
   senderName String
-  senderEmail String
+  senderEmail String?
 
   content String?
   rating Int? @default(5)
   videoUrl String?
-
+  imageUrl String[] @default([])
   consentDisplay Boolean @default(true)
   isLiked Boolean @default(false)
   spaceId String 
@@ -144,6 +145,14 @@ enum ContentType {
 enum TestimonialSource {
   IMPORT 
   MANUAL
+}
+
+enum ImportType {
+  Twitter
+  Linkedin
+  ProductHunt
+  Google
+  Youtube
 }
 
 enum Theme {
