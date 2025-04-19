@@ -1,6 +1,6 @@
   import { ImportedTestimonials } from "./main-content/imported-testimonial";
   import { ImportDialog } from "../import-dialog";
-import { Suspense } from "react";
+
   export  function ImportTestimonials({spaceSlug} :{spaceSlug : string}) {
      
     return (
@@ -10,7 +10,7 @@ import { Suspense } from "react";
           <div>
          
               <ImportedTestimonials spaceSlug={spaceSlug}/>
-            
+              
           </div>
         </div>
       </>

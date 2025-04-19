@@ -152,6 +152,18 @@ export async function importX({
         success: false,
         error: "Invalid tweet link",
       };
+    } 
+
+    const alreadyExist = await prisma.testimonials.findFirst({
+      where : {
+        uniqueImportId : tweetId
+      }
+    })
+    if(alreadyExist) {
+      return {
+        success : false,
+        error : "Already imported!"
+      }
     }
 
     const res = await getTweet(tweetId);
@@ -161,16 +173,18 @@ export async function importX({
         success: false,
         error: "Tweet not found, check again!",
       };
-    console.log(res);
+
     const message = res.text;
     const firstName = res.user.name as string;
-    // const image = res.user.profile_image_url_https;
+    const image = res.user.profile_image_url_https;
 
-    let importedImages: string[] = [];
+    let images: string[] = [];
+
     if (res.photos && res.photos?.length > 0) {
-      importedImages = res.photos?.map((photo) => photo.url);
+      images = res.photos?.map((photo) => photo.url);
     }
-
+    const importedImages = [image, ...images];
+    console.log(res);
     const videos: string[] = [];
     if (res?.video) {
       videos.push(res.video.variants[res.video.variants.length - 1].src);
@@ -181,7 +195,9 @@ export async function importX({
         spaceId: findSpace.id,
         type: res.video ? "VIDEO" : "TEXT",
         source: "IMPORT",
+        uniqueImportId: res.id_str,
         senderName: firstName,
+        senderEmail: res.user.screen_name,
         importedFrom: "Twitter",
         content: message,
         videoUrl: videos[0],
@@ -189,7 +205,7 @@ export async function importX({
         imageUrl: importedImages,
       },
     });
-    console.log(makeTestimonial);
+
     if (!makeTestimonial) {
       return {
         success: false,
@@ -200,6 +216,7 @@ export async function importX({
     return {
       success: true,
       message: "Added!",
+      data : makeTestimonial
     };
   } catch (err) {
     console.log(err);

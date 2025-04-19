@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { Import } from "lucide-react";
 import { Button } from "./ui/button";
@@ -7,35 +7,53 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { importX } from "@/app/actions/testimonials.actions";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function ImportDialog({
     spaceSlug
 } : {spaceSlug : string}) {
     const [isOpen, setIsOpen] = useState(false);
-    const [loading, isLoading] = useState(false);
-    async function handleSubmit(formData: FormData) {
-      isLoading(true);
+  
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+      
+      mutationFn : async (formData : FormData) => {
         const link = formData.get("link") as string;
-        console.log(typeof link);
-        
         if(!link)
         {
           toast.error("Enter a link dawg!") 
           return;
         }
-       const res = await importX({
-        link,
-        spaceSlug
-       });
-        
-       if(res.success) {
-        toast.success(res.message);
-       }
-       else toast.error(res.error)
 
-       setIsOpen(false);
-       isLoading(false);
-        
+        const res = await importX({
+          link,
+          spaceSlug
+         });
+
+         if(res.success) {
+          return res.data;
+         }
+         else {
+          throw new Error(res.error)
+         }
+
+
+      },
+      onSuccess : (data) => {
+        queryClient.setQueryData(["testimonials", "space", "imported", spaceSlug],(oldData : any) => {
+          if(!oldData) return [data];
+          return [...oldData,data];
+        })
+
+        toast.success("Added!")
+        setIsOpen(false);
+      },
+      onError(error : Error) {
+        toast.error(error.message);
+      }
+    })
+    async function handleSubmit(formData: FormData){
+      mutation.mutate(formData)        
     }
 
     return(
@@ -82,7 +100,7 @@ export function ImportDialog({
                 </div>
               </div>
               <Button type="submit" className="w-full">
-                {loading ? "Importing...." : "Import"}
+                {mutation.isPending ? "Importing...." : "Import"}
               </Button>
             </form>
           </DialogContent>

@@ -12,9 +12,11 @@ import {
   ChevronDown,
   ChevronUp,
   Heart,
+  Link2,
   Mail,
   Star,
   ThumbsUp,
+  Trash2,
   X,
 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -37,7 +39,6 @@ export function EachTestimonial({
   isLiked,
   spaceSlug,
 }: Partial<Testimonials> & { spaceSlug?: string }) {
- 
   const likeTestimonial = useLikeTestimonial(spaceSlug as string);
   const handleLike = () => {
     likeTestimonial.mutate({
@@ -74,7 +75,7 @@ export function EachTestimonial({
 
   return (
     <>
-      <Card className="w-full bg-secondary flex flex-col h-full">
+      <Card className="w-full bg-secondary flex flex-col h-full ">
         <CardHeader className="flex flex-row justify-between p-2 items-center">
           <div className="flex flex-col gap-1">
             <h3 className="text-foreground text-lg font-medium tracking-tight">
@@ -145,70 +146,60 @@ export function EachTestimonial({
           </div>
         </CardContent>
 
+      
+
         <CardFooter className="flex flex-col mt-auto p-2">
-             {/* need to make sure we prevent any direct like invocation in the api + add rate limiting */}   
-          {consentDisplay && (
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`flex items-center gap-1 ${
-                  isLiked ? "text-red-500" : "text-white"
-                }`}
-                onClick={handleLike}
-                disabled={likeTestimonial.isPending}
-              >
-                <Heart className={`w-4 h-4 ${isLiked ? "fill-red-500" : ""}`} />
-              </Button>
-            </div>
-          )}
-  
-          {isExpanded && (
-            <div className="flex w-full gap-2 mb-2">
-              <Button
-                variant={"outline"}
-                className="rounded-xl w-fit bg-transparent text-white"
-              >
-                Delete
-              </Button>
-              <Button
-                className="rounded-xl w-fit bg-transparent text-white"
-                onClick={() => 
-                  openDialog("single", {
-                    id: id,
-                    senderEmail: senderEmail,
-                    senderName: senderName,
-                    createdAt: createdAt,
-                    rating,
-                    content,
-                    videoUrl,
-                  })
-                }
-              >
-                Get link
-              </Button>
-              <Button className="rounded-xl w-fit bg-transparent text-white">
-                ok
-              </Button>
-            </div>
-          )}
-          <Button
-            onClick={() => setIsExpanded((p) => !p)}
-            className="w-full mt-auto"
-            variant={"default"}
-          >
-            {!isExpanded ? (
-              <div className="flex items-center justify-center w-full gap-1">
-                <span>Show more</span>
-                <ChevronDown className="size-3" />
-              </div>
-            ) : (
-              <div className="flex items-center justify-center w-full gap-1">
-                <span>Show less</span>
-                <ChevronUp className="size-3" />
+          <div className="w-3/4 border-t border-black/5 dark:border-white/10 pt-3" />
+                   {/* need to make sure we prevent any direct like invocation in the api + add rate limiting */}
+          <div className="flex w-full gap-2 mb-2">
+            {consentDisplay && (
+              <div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={`flex items-center gap-2 transition-colors rounded-full ${
+                    isLiked
+                    ? "text-red-500 bg-red-500/10 hover:bg-red-500/20"
+                    : "text-gray-500 hover:text-red-500 hover:bg-red-500/10"
+                  }`}
+                  onClick={handleLike}
+                  disabled={likeTestimonial.isPending}
+                >
+                  <Heart
+                    className={`w-4 h-4 ${isLiked ? "fill-red-500" : ""}`}
+                  />
+                  <span className="text-sm">Like</span>
+                </Button>
               </div>
             )}
-          </Button>
+            <Button
+              variant={"outline"}
+              size={"sm"}
+              className="rounded-full w-fit bg-transparent text-white"
+            >
+              <Trash2 className="w-4 h-4"/>
+              <span>Delete</span>
+            </Button>
+            <Button
+              className="rounded-full w-fit bg-transparent text-white border"
+              variant={"default"}
+              size={"sm"}
+              onClick={() =>
+                openDialog("single", {
+                  id: id,
+                  senderEmail: senderEmail,
+                  senderName: senderName,
+                  createdAt: createdAt,
+                  rating,
+                  content,
+                  videoUrl,
+                })
+              }
+            >
+              <Link2 className="w-4 h-4"/>
+              <span>Link</span>
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </>

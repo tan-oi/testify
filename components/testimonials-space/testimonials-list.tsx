@@ -19,7 +19,7 @@ export function TestimonialsList({
     return <VideoTestimonials spaceSlug={spaceSlug} />;
   if (currentView === "liked")
     return <LikedTestimonials spaceSlug={spaceSlug} />;
-  if (currentView.includes("x"))
+  if (currentView.includes("twitter"))
     return <ImportTestimonials spaceSlug={spaceSlug}/>
 
   return (
