@@ -18,6 +18,11 @@ export function LikedTestimonials({spaceSlug} : {spaceSlug : string}) {
     const filteredText = allText.filter((t) => t.isLiked === true);
   const filteredVideo = allVideo.filter((t) => t.isLiked === true);
 
+    if(filteredText.length === 0 && filteredVideo.length === 0) {
+      return (
+        <p>Nothings Liked</p>
+      )
+    }
 
     const merged = [...filteredText, ...filteredVideo].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

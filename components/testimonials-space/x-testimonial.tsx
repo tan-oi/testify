@@ -4,6 +4,10 @@ import { Card } from "../ui/card";
 import { Testimonials } from "@prisma/client";
 import { Heart, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { useDeleteModal } from "@/lib/store/spaceStore";
+import { deleteTestimonial } from "@/app/actions/testimonials.actions";
+import { DeleteButton } from "../all-buttons";
 
 export function XCard(
   props: Testimonials & { onDelete?: (id: string) => void }
@@ -18,7 +22,7 @@ export function XCard(
     onDelete,
   } = props;
   const [isLiked, setIsLiked] = useState(false);
-
+  const openDeleteDialog = useDeleteModal((state) => state.openDeleteModal)
   const hasProfileImage =
     Array.isArray(imageUrl) && imageUrl.length > 0 && imageUrl[0];
   const mediaContent = Array.isArray(imageUrl) ? imageUrl.slice(1) : [];
@@ -211,6 +215,14 @@ export function XCard(
               <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
               <span className="text-sm">Like</span>
             </button>
+
+            <DeleteButton id={id as string}
+            name={senderName as string}
+            entityType="testimonial"
+            labelText="Testimonial"
+            type={"Imported"}
+            />
+           
           </div>
         </div>
       </div>

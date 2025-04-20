@@ -183,7 +183,8 @@ export function SpaceOverview() {
                         }, deleteSpace,
                         {
                           entityType : "space",
-                          labelText : "Delete space"
+                          labelText : "Delete space",
+                          type  : "space"
                         })
                     }
                   

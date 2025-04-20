@@ -1,6 +1,12 @@
 import { useFormStatus } from "react-dom";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
+import { useDeleteModal } from "@/lib/store/spaceStore";
+import { deleteTestimonial } from "@/app/actions/testimonials.actions";
+import { deleteSpace } from "@/app/actions/space.actions";
+import { DeleteButtontypes } from "@/lib/types";
+
+
 export function GoogleAuthButton() {
   const { pending } = useFormStatus();
   return (
@@ -29,4 +35,39 @@ export function GoogleAuthButton() {
   );
 }
 
+export function DeleteButton(
+  {
+    id,name,entityType,labelText,type
+  } : DeleteButtontypes
+)   {
 
+  const openDeleteDialog = useDeleteModal((state) => state.openDeleteModal);
+  
+  let action:any ="";
+  if(entityType === "testimonial") {
+
+     action = deleteTestimonial
+  }
+    else {
+
+       action = deleteSpace
+    }
+  return(
+    <Button className="rounded-full w-fit bg-transparent text-white border"
+    variant={"outline"}
+    size={"sm"}
+      onClick={() => openDeleteDialog({
+        id : id,
+        name,
+      },action,{
+        entityType,
+        labelText,
+        type
+      })}
+    >
+      <Trash2 className="w-4 h-4"/>
+      <span>Delete</span>
+      </Button>
+
+  )
+}

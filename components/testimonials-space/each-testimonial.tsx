@@ -25,6 +25,7 @@ import { useEmbedStore } from "@/lib/store/embedStore";
 import { useLikeTestimonial } from "@/lib/hooks/useLikeTestimonial";
 import { useDeleteModal } from "@/lib/store/spaceStore";
 import { deleteTestimonial } from "@/app/actions/testimonials.actions";
+import { DeleteButton } from "../all-buttons";
 
 export function EachTestimonial({
   id,
@@ -48,10 +49,10 @@ export function EachTestimonial({
     });
   };
 
-  const [isExpanded, setIsExpanded] = useState(false);
+
 
   const openDialog = useEmbedStore((state) => state.openDialog);
-
+  const openDeleteDialog = useDeleteModal((state) => state.openDeleteModal)
   const formatDate = (dateInput: Date | string | null | undefined): string => {
     if (!dateInput) return "";
 
@@ -172,14 +173,28 @@ export function EachTestimonial({
                 </Button>
               </div>
             )}
-            <Button
+            {/* <Button
               variant={"outline"}
               size={"sm"}
               className="rounded-full w-fit bg-transparent text-white"
+              onClick={() => openDeleteDialog({
+                id : id!,
+                name : senderName!
+              },deleteTestimonial,{
+                entityType : "testimonial",
+                labelText : "Testimonial",
+                type : type as string
+              })}
             >
               <Trash2 className="w-4 h-4"/>
               <span>Delete</span>
-            </Button>
+            </Button> */}
+            <DeleteButton id={id as string}
+            name={senderName as string}
+            entityType="testimonial"
+            labelText="Testimonial"
+            type={type as string}
+            />
             <Button
               className="rounded-full w-fit bg-transparent text-white border"
               variant={"default"}

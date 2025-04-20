@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +19,8 @@ import { useDeleteModal } from "@/lib/store/spaceStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function DeleteModal() {
+export function DeleteModal({ spaceSlug }: { spaceSlug: string }) {
+  console.log(spaceSlug);
   const queryClient = useQueryClient();
   const id = useId();
   const [loading, setLoading] = useState(false);
@@ -29,16 +29,22 @@ export function DeleteModal() {
   const { isOpen, closeModal, deleteAction, values, metaData } =
     useDeleteModal();
   if (!deleteAction) return;
-
+  console.log(metaData);
   const handleDelete = async () => {
     try {
       setLoading(true);
       const result = await deleteAction(values);
       if (result.success) {
+        if(metaData?.entityType === "space") {
+          queryClient.invalidateQueries({
+            queryKey : ["spaces","overview"]
+          })
+        }
+        else {
         queryClient.invalidateQueries({
-          queryKey: ["space", "overview"],
+          queryKey: ["testimonials", "space", metaData?.type.toLowerCase(), spaceSlug],
         });
-
+      }
         toast.success("Space deleted successfully!");
       } else toast.error("Something went wrong, please try again!");
     } catch (err) {

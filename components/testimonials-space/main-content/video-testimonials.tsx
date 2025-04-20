@@ -19,9 +19,13 @@ export function VideoTestimonials({
 
   const allTestimonials = data?.pages.flatMap((page) => page.items) || [];
 
-  if(!allTestimonials.length) return <div>
-    No videos oww woo
-  </div>
+  if(!allTestimonials || allTestimonials.length === 0) 
+  return (
+    <div className="flex flex-col items-center justify-center py-8 text-center">
+      <p>No video testimonials yet!</p>
+
+      </div>
+  )
 
 
 const groupedTestimonials = [];

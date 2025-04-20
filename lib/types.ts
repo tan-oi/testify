@@ -88,7 +88,7 @@ export type StyleState = {
 type MetaData = {
   entityType: string;
   labelText: string;
-  type? : string; 
+  type : string; 
 };
 
 export type DeleteModalStore = {
@@ -103,3 +103,11 @@ export type DeleteModalStore = {
   ) => void;
   closeModal: () => void;
 };
+
+export interface DeleteButtontypes{
+  id : string;
+  name : string;
+  entityType : string;
+  labelText : string;
+  type : string;
+}

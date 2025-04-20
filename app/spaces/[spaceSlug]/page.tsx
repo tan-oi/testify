@@ -15,6 +15,7 @@ import { GlobalModal } from "@/components/use-dialog";
 import { SpaceSidebar } from "@/components/testimonials-space/sidebar";
 import { fetchTextTestimonials } from "@/lib/services/testimonials";
 import { EmbedTestimonialOverlay } from "@/components/embed-testimonial-overlay";
+import { DeleteModal } from "@/components/delete-modal";
 
 
 
@@ -91,6 +92,7 @@ export default async function SpacePage({
         <Suspense fallback={<p>Loading testimonials...</p>}>
           <TestimonialsList spaceSlug={space.slug} spaceId = {space.id}/>
         </Suspense>
+        <DeleteModal spaceSlug={space.slug}/>
         <GlobalModal/>
         <EmbedTestimonialOverlay/>
       
