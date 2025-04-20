@@ -12,7 +12,7 @@ export async function fetchTextTestimonials({
 }) {
    
     try {
-        console.log(type);
+        console.log(limit);
    
 
   let cursorCreatedAt: Date | undefined;
