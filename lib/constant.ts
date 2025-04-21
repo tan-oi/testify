@@ -36,6 +36,18 @@ export const sidebarData = [
       //   icon : "Linkedin"
       // }
     ],
+    More : [
+      {
+        name : "Edit space",
+        viewName: "editspace",
+        icon : "Edit"
+      },
+      {
+        name : "Request testimonials",
+        viewName : "request",
+        icon : "Edit"
+      },
+    ]
 
   }
 ];
