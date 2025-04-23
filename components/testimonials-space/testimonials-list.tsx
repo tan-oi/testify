@@ -5,6 +5,10 @@ import { VideoTestimonials } from "./main-content/video-testimonials";
 import { AllTestimonials } from "./main-content/all-testimonials";
 import { LikedTestimonials } from "./main-content/liked-testimonials";
 import { ImportTestimonials } from "./import-testimonials"
+import { toast } from "sonner";
+import { RequestTestimonial } from "./main-content/request-testimonial";
+
+import { useDeleteModal, useSpaceModalStore } from "@/lib/store/spaceStore";
 
 export function TestimonialsList({
   spaceSlug,
@@ -13,6 +17,7 @@ export function TestimonialsList({
   spaceId: string;
 }) {
   const currentView = contentStore((state) => state.currentView);
+ 
   console.log(currentView);
   if (currentView === "all") return <AllTestimonials spaceSlug={spaceSlug} />;
   if (currentView === "videos")
@@ -21,7 +26,9 @@ export function TestimonialsList({
     return <LikedTestimonials spaceSlug={spaceSlug} />;
   if (currentView.includes("twitter"))
     return <ImportTestimonials spaceSlug={spaceSlug}/>
-
+  if(currentView === "request")
+  return <RequestTestimonial spaceSlug={spaceSlug}/>
+  
   return (
     <>
       <div className="pb-6">

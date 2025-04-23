@@ -19,7 +19,7 @@ import { useDeleteModal } from "@/lib/store/spaceStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function DeleteModal({ spaceSlug }: { spaceSlug: string }) {
+export function DeleteModal({ spaceSlug }: { spaceSlug?: string }) {
   console.log(spaceSlug);
   const queryClient = useQueryClient();
   const id = useId();

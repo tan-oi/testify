@@ -37,15 +37,15 @@ export const sidebarData = [
       // }
     ],
     More : [
-      {
-        name : "Edit space",
-        viewName: "editspace",
-        icon : "Edit"
-      },
+      // {
+      //   name : "Edit space",
+      //   viewName: "editspace",
+      //   icon : "Edit"
+      // },
       {
         name : "Request testimonials",
         viewName : "request",
-        icon : "Edit"
+        icon : "Handshake"
       },
     ]
 
