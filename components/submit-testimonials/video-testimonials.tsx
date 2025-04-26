@@ -99,7 +99,7 @@ export default function VideoTestimonial({ getFormDetails }: TestimonialProps) {
     const file = e.target.files?.[0];
 
     if (file) {
-      if (file.size > 100 * 1024 * 1024) {
+      if (file.size > 50 * 1024 * 1024) {
         setVideoFile(null);
         setSelectedVideo(null);
         toast.error("File size exceeds limit. Please submit a smaller file.");

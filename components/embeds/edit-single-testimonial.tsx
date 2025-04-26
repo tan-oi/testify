@@ -10,32 +10,29 @@ import {
 } from "./edit-options";
 import { Button } from "../ui/button";
 
-export function EditSingleTestimonial({ 
+
+export function EditSingleTestimonial({
   content,
   createdAt,
   id,
   rating,
   senderEmail,
   senderName,
-  videoUrl 
- }: Partial<Testimonials>) {
-
-  
-
+  videoUrl,
+}: Partial<Testimonials>) {
   const generateEmbedCode = (testimonialId: string): string => {
-    const { styles } = useStyleStore(); 
-    console.log(styles,"styles");
+    const { styles } = useStyleStore();
+    console.log(styles, "styles");
 
     const wrapperStyle = styles.wrapper || {};
     const contentStyle = styles.content || {};
 
     const cleanObject = (obj: Record<string, any>) =>
-  Object.fromEntries(
-    Object.entries(obj)
-      .filter(([, val]) => val !== undefined && val !== null)
-      .map(([key, val]) => [key, String(val)])
-  );
-
+      Object.fromEntries(
+        Object.entries(obj)
+          .filter(([, val]) => val !== undefined && val !== null)
+          .map(([key, val]) => [key, String(val)])
+      );
 
     const wrapper = cleanObject(wrapperStyle);
     const content = cleanObject(contentStyle);
@@ -45,7 +42,7 @@ export function EditSingleTestimonial({
       content: JSON.stringify(content),
     });
 
-    const embedUrl = `http://localhost:3000/embeds/testimonial/${testimonialId}?${queryParams.toString()}`;
+    const embedUrl = `${process.env.NEXT_PUBLIC_TRUE_HOST}/embeds/testimonial/${testimonialId}?${queryParams.toString()}`;
 
     return `<iframe src="${embedUrl}" width="100%" height="200" frameborder="0"></iframe>`;
   };
@@ -84,7 +81,10 @@ export function EditSingleTestimonial({
       </Tabs>
 
       <h3>Live Preview</h3>
-      <EditEmbedPreview content={content as string} senderName={senderName as string} />
+      <EditEmbedPreview
+        content={content as string}
+        senderName={senderName as string}
+      />
 
       <div className="mt-10">
         <h3>Embed Code</h3>
@@ -96,9 +96,7 @@ export function EditSingleTestimonial({
       </div>
 
       <div className="flex justify-end items-center pr-2 mt-4">
-        <Button size={"lg"}>
-          Save edit
-        </Button>
+        <Button size={"lg"}>Save edit</Button>
       </div>
     </div>
   );

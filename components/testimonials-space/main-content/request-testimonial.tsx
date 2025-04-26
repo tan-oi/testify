@@ -5,14 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSpaceModalStore } from "@/lib/store/spaceStore";
+
 import { Copy, Eye } from "lucide-react";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
 export function RequestTestimonial({ spaceSlug }: { spaceSlug: string }) {
  
-
     const link = `${process.env.NEXT_PUBLIC_TRUE_HOST}/${spaceSlug}`
   return (
     <div className="flex items-center justify-center pt-10">
