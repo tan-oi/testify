@@ -9,7 +9,8 @@ import {
   EditFontOption,
 } from "./edit-options";
 import { Button } from "../ui/button";
-
+import { revalidateEmbed } from "@/app/actions/testimonials.actions";
+import { useState } from "react";
 
 export function EditSingleTestimonial({
   content,
@@ -20,6 +21,7 @@ export function EditSingleTestimonial({
   senderName,
   videoUrl,
 }: Partial<Testimonials>) {
+  const [loading, setLoading] = useState(false);
   const generateEmbedCode = (testimonialId: string): string => {
     const { styles } = useStyleStore();
     console.log(styles, "styles");
@@ -42,9 +44,22 @@ export function EditSingleTestimonial({
       content: JSON.stringify(content),
     });
 
-    const embedUrl = `${process.env.NEXT_PUBLIC_TRUE_HOST}/embeds/testimonial/${testimonialId}?${queryParams.toString()}`;
+    const embedUrl = `${
+      process.env.NEXT_PUBLIC_TRUE_HOST
+    }/embeds/testimonial/${testimonialId}?${queryParams.toString()}`;
 
     return `<iframe src="${embedUrl}" width="100%" height="200" frameborder="0"></iframe>`;
+  };
+
+  const editEmbed = async (testimonialId: string) => {
+    setLoading(true);
+    try {
+      await revalidateEmbed(testimonialId);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -96,7 +111,9 @@ export function EditSingleTestimonial({
       </div>
 
       <div className="flex justify-end items-center pr-2 mt-4">
-        <Button size={"lg"}>Save edit</Button>
+        <Button size={"lg"} onClick={() => editEmbed(id as string)}>
+          {loading ? <p>Saving Edit...</p> : <p>Save edit</p>}
+        </Button>
       </div>
     </div>
   );

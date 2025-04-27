@@ -69,7 +69,9 @@ export async function GET(
   return new NextResponse(html, {
     headers: {
       "Content-Type": "text/html",
-      //gotta add caching.
+      "Cache-Control" : "public, s-maxage=31536000, immutable",
+      "Cache-Tag" : `testimonial-${id}`
+      
     },
   });
 }

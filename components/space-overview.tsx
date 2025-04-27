@@ -140,7 +140,7 @@ export function SpaceOverview() {
             <CardContent className="pt-2 md:pt-4 flex items-center justify-between">
               <div className="flex flex-col space-y-3 w-full">
                 <div className="flex justify-between items-center">
-                  <Link href={`/spaces/${item.slug}`}>
+                  <Link href={`/spaces/${item.slug}`}> 
                   <h1 className="font-semibold text-foreground text-xl">
                     {item.name}
                   </h1>

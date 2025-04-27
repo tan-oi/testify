@@ -43,7 +43,7 @@ export function EmbedTestimonialOverlay() {
             <div className="mt-2 p-2 bg-secondary rounded flex items-center">
               <input
                 type="text"
-                value={`http:locahost:3000/embeds/testimonial/${passedData.id}?video`}
+                value={`${process.env.NEXT_PUBLIC_TRUE_HOST}/embeds/testimonial/${passedData.id}?video`}
                 className="bg-transparent flex-1 border-none outline-none text-sm"
                 readOnly
               />

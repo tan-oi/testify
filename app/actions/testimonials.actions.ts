@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getTextTestimonialsSchema } from "@/lib/schema";
 import { Testimonials } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getTweet } from "react-tweet/api";
@@ -225,4 +226,9 @@ export async function importX({
       error: "Something got wrong",
     };
   }
+}
+
+
+export async function revalidateEmbed(id : string) {
+  revalidateTag(`testimonial-${id}`) 
 }
