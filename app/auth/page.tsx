@@ -10,7 +10,7 @@ export default async function AuthPage() {
   return (
     <>
       <div className="flex flex-col items-center justify-center mt-16 space-y-2">
-        <Tabs defaultValue="signup" className="w-[350px]">
+        {/* <Tabs defaultValue="signup" className="w-[350px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signup">Signup</TabsTrigger>
             <TabsTrigger value="login">Login</TabsTrigger>
@@ -25,7 +25,8 @@ export default async function AuthPage() {
           <TabsContent value="login">
             <AuthForm header={"Welcome back!"} description={"Get back to your account"} type={"login"}/>
           </TabsContent>
-        </Tabs>
+        </Tabs> */}
+        <AuthForm header={"Hey come on in!"} description={"Just a step left"} type={"login"}/>
       </div>
     </>
   );

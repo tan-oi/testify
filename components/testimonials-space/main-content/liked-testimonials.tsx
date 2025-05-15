@@ -20,7 +20,10 @@ export function LikedTestimonials({spaceSlug} : {spaceSlug : string}) {
 
     if(filteredText.length === 0 && filteredVideo.length === 0) {
       return (
-        <p>Nothings Liked</p>
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+        <p className="text-gray-500 mb-2">Don't think you've liked anythng yet.</p>
+        <p className="text-gray-400 text-sm">Go on do it!</p>
+      </div>
       )
     }
 
@@ -33,6 +36,7 @@ export function LikedTestimonials({spaceSlug} : {spaceSlug : string}) {
         groupedTestimonials.push(merged.slice(i, i + 2));
       }
 
+    
       return (
         <div className="flex flex-col space-y-4">
         {groupedTestimonials.map((pair, index) => (

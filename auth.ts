@@ -16,48 +16,48 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
 
-    Credentials({
-      name: "Enter your details",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "Enter a valid email",
-        },
-        password: {
-          label: "Password",
-          type: "Password",
-          placeholder: "Enter a valid password",
-        },
-      },
-      async authorize(credentials) {
-        if (!credentials.email || !credentials.password)
-          throw new Error("Please enter a valid email and password");
+    // Credentials({
+    //   name: "Enter your details",
+    //   credentials: {
+    //     email: {
+    //       label: "Email",
+    //       type: "email",
+    //       placeholder: "Enter a valid email",
+    //     },
+    //     password: {
+    //       label: "Password",
+    //       type: "Password",
+    //       placeholder: "Enter a valid password",
+    //     },
+    //   },
+    //   async authorize(credentials) {
+    //     if (!credentials.email || !credentials.password)
+    //       throw new Error("Please enter a valid email and password");
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email as string,
-          },
-        });
+    //     const user = await prisma.user.findUnique({
+    //       where: {
+    //         email: credentials.email as string,
+    //       },
+    //     });
 
-        if (!user) throw new Error("No user found, please create an account");
+    //     if (!user) throw new Error("No user found, please create an account");
 
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password as string,
-          user.hashedPassword as string
-        );
-        if (!isPasswordValid)
-          throw new Error(
-            "Wrong password, please try again with a new password"
-          );
+    //     const isPasswordValid = await bcrypt.compare(
+    //       credentials.password as string,
+    //       user.hashedPassword as string
+    //     );
+    //     if (!isPasswordValid)
+    //       throw new Error(
+    //         "Wrong password, please try again with a new password"
+    //       );
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        };
-      },
-    }),
+    //     return {
+    //       id: user.id,
+    //       name: user.name,
+    //       email: user.email,
+    //     };
+    //   },
+    // }),
   ],
 
   callbacks: {

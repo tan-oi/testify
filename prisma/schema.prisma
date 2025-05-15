@@ -53,7 +53,7 @@ model SpaceCustomization {
 
     headerTitle String
     headerDescription String
-    // spaceQuestions String[]
+    spaceQuestions Json[]
     allowVideo Boolean
 
     // spaceTheme Theme @default(DARK)

@@ -40,34 +40,34 @@ const AuthSchema = z.object({
 
 export function AuthForm({ header, description, type }: FormInputTypes) {
   const [isPending, startTransition] = useTransition();
-  const form = useForm<z.infer<typeof AuthSchema>>({
-    resolver: zodResolver(AuthSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  // const form = useForm<z.infer<typeof AuthSchema>>({
+  //   resolver: zodResolver(AuthSchema),
+  //   defaultValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  // });
 
-  const onSubmit = (values: z.infer<typeof AuthSchema>) => {
-    startTransition(async () =>{
-     const res: {
-      success: boolean;
-      errorType?:string;
-      message?:string;
-     } =
-       await handleCredentials({
-        ...values,
-        type: type,
-      });
+  // const onSubmit = (values: z.infer<typeof AuthSchema>) => {
+  //   startTransition(async () =>{
+  //    const res: {
+  //     success: boolean;
+  //     errorType?:string;
+  //     message?:string;
+  //    } =
+  //      await handleCredentials({
+  //       ...values,
+  //       type: type,
+  //     });
       
-      if(!res.success && res.errorType) {
-        form.setError(res.errorType as "email" | "password" | `root.${string}` | "root",{
-          message : res.message
-        })
-      }
-      form.reset();
-    })
-    };
+  //     if(!res.success && res.errorType) {
+  //       form.setError(res.errorType as "email" | "password" | `root.${string}` | "root",{
+  //         message : res.message
+  //       })
+  //     }
+  //     form.reset();
+  //   })
+  //   };
 
   const handleGoogleOAuth = () => {
     startTransition(async () => {
@@ -117,42 +117,6 @@ export function AuthForm({ header, description, type }: FormInputTypes) {
 
             <div className="w-full border-t border-muted"></div>
           </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="john@gmail.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input placeholder="12345678" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full" disabled={isPending}>
-                Submit
-              </Button>
-            </form>
-          </Form>
         </CardContent>
       </Card>
     </>

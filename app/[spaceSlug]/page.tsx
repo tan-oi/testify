@@ -1,72 +1,81 @@
 import TextTestimonial from "@/components/submit-testimonials/text-testimonials";
 import VideoTestimonial from "@/components/submit-testimonials/video-testimonials";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { spaceExists } from "@/lib/services/spaceMetrics";
+import { Questions } from "@/lib/store/spaceStore";
+export default async function ReceivedTestimonials({
+  params,
+}: {
+  params: Promise<{ spaceSlug: string }>;
+}) {
+  const { spaceSlug } = await params;
 
-export default async function ReceivedTestimonials(
-    { params } : {
-        params : Promise<{spaceSlug : string}>;
-    }
-) {
+  const isValid = await spaceExists(spaceSlug);
+  if (!isValid)
+    return <p>this space doesnt exist, please check the link again, thanks</p>;
 
-    const { spaceSlug } = await params;
+  const getFormDetails = await prisma.space.findUnique({
+    where: {
+      slug: spaceSlug,
+    },
+    select: {
+      spaceCustomization: true,
+    },
+  });
 
-    const isValid = await spaceExists(spaceSlug)
-    if(!isValid) return <p>this space doesnt exist, please  check the link again, thanks</p>
-
-
-    const getFormDetails = await prisma.space.findUnique({
-        where : {
-            slug : spaceSlug
-        },
-        select : {
-            spaceCustomization : true
-        }
-    })
+  const questions = getFormDetails?.spaceCustomization?.spaceQuestions as
+    | Questions[]
+    | undefined;
 
   
-    return (
-        <>
-         
-           <div className="container pt-10 flex items-center justify-center mx-auto">
-                <Card className="md:min-w-[400px]">
-                    <CardHeader>
-                        <CardTitle>
-                            <div className="flex items-center justify-center">
-                            {getFormDetails?.spaceCustomization?.headerTitle}
-                            </div>
-                            <div>
-                                {getFormDetails?.spaceCustomization?.headerDescription}
-                            </div>
-                        </CardTitle>
-                    </CardHeader>
+  return (
+    <>
+      <div className="container pt-10 flex items-center justify-center mx-auto">
+        <Card className="md:min-w-[400px] bg-card">
+          <CardHeader>
+            <CardTitle>
+              <div className="flex-col items-center justify-center">
+                <p className="text-xl text-center">
+                  {getFormDetails?.spaceCustomization?.headerTitle}
+                </p>
+                <p className="text-sm text-white/60 text-center">
+                  {getFormDetails?.spaceCustomization?.headerDescription}
+                </p>
+              </div>
+            </CardTitle>
+          </CardHeader>
 
-                <CardContent className="ml-6">
-                    <div>
-                        <p>
-                            QUestions
-                        </p>
-                        <ul>
-                            <li>one</li>
-                            <li>two</li>
-                            <li>three</li>
-                        </ul>
-                    </div>
-                </CardContent>  
-                    <CardFooter className="block">
-                        <div className="flex justify-center items-center gap-4">
-                            {
-                                getFormDetails?.spaceCustomization?.allowVideo ?  <VideoTestimonial getFormDetails={getFormDetails?.spaceCustomization || null}/> : null
-                            }
-                            <TextTestimonial getFormDetails={getFormDetails?.spaceCustomization || null}/>
-                        </div>
-                    </CardFooter>
-                </Card>
-           </div>
-        </>
-    )
-
+          <CardContent className="container mx-auto">
+            <p className="text-md text-white/50">Respond accordingly</p>
+            <ul>
+              {questions?.map((item, i) => (
+                <div key={i}>
+                  {item?.id}. {item?.text}
+                </div>
+              ))}
+            </ul>
+          </CardContent>
+          <CardFooter className="gap-4">
+            {getFormDetails?.spaceCustomization?.allowVideo ? (
+              <VideoTestimonial
+                getFormDetails={getFormDetails?.spaceCustomization || null}
+              />
+            ) : null}
+            <TextTestimonial
+              getFormDetails={getFormDetails?.spaceCustomization || null}
+            />
+          </CardFooter>
+        </Card>
+      </div>
+    </>
+  );
 }
 
 // "use client";
@@ -83,13 +92,13 @@ export default async function ReceivedTestimonials(
 //       <UploadButton
 //         endpoint="imageUploader"
 //         onClientUploadComplete={(res) => {
-         
+
 //           console.log("Files: ", res[0].ufsUrl);
 //           setImage(res[0].ufsUrl);
 //           alert("Upload Completed");
 //         }}
 //         onUploadError={(error: Error) => {
-       
+
 //           alert(`ERROR! ${error.message}`);
 //         }}
 //       />
@@ -107,14 +116,11 @@ export default async function ReceivedTestimonials(
 //         }}
 //       />
 
-
 //       {image && (
-        
+
 //         <Image src={image} alt="okay"
 //         width="100" height="100"/>
 
-       
-        
 //       )}
 
 //       {video && (
@@ -128,6 +134,3 @@ export default async function ReceivedTestimonials(
 //     </main>
 //   );
 //       }
-
-
-

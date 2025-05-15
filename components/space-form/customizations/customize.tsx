@@ -38,6 +38,7 @@ export function Customize() {
   const { data: session } = useSession();
   if (!session || !session?.user) router.push("/auth");
   const { formData, updateFormData, closeModal, type } = useSpaceModalStore();
+ 
   const allowVideo = formData?.allowVideo || false;
   const [isLoading, setIsLoading] = useState(false);
 

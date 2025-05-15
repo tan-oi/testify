@@ -182,8 +182,8 @@ export default function VideoTestimonial({ getFormDetails }: TestimonialProps) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" onClick={() => setIsDialogOpen(true)}>
-          Video testimonial
+        <Button variant="default" className="w-full" onClick={() => setIsDialogOpen(true)}>
+          Video
         </Button>
       </DialogTrigger>
 

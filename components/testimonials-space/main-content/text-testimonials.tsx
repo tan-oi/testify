@@ -41,9 +41,10 @@ export function TextTestimonials({ spaceSlug }: { spaceSlug: string }) {
   const allTestimonials = data?.pages.flatMap((page) => page.items) || [];
 
   if(!allTestimonials.length) {
-    return <div>
-      No text sadly
-    </div>
+    return   <div className="flex flex-col items-center justify-center py-8 text-center">
+    <p className="text-gray-500 mb-2">No text testimonials yet</p>
+    <p className="text-gray-400 text-sm">They very well might come in, check if you've asked for them!</p>
+  </div>
   }
 
   const groupedTestimonials = [];

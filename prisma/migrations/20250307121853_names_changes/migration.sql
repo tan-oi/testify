@@ -1,4 +1,4 @@
-/*
+y/*
   Warnings:
 
   - You are about to drop the column `spaceAskConsent` on the `SpaceCustomization` table. All the data in the column will be lost.

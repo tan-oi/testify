@@ -40,7 +40,10 @@ export function VideoTestimonials({ spaceSlug }: { spaceSlug: string }) {
   if (!allTestimonials || allTestimonials.length === 0)
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <p>No video testimonials yet!</p>
+        <p className="text-gray-500 mb-2">No video testimonials yet</p>
+        <p className="text-gray-400 text-sm">
+          They very well might come in, check if you've asked for them!
+        </p>
       </div>
     );
 

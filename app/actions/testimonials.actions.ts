@@ -65,6 +65,8 @@ export async function submitVideoTestimonial(values: Partial<Testimonials>) {
         senderEmail: values.senderEmail as string,
         consentDisplay: values.consentDisplay,
         rating: values.rating,
+        type : "VIDEO",
+        source : "MANUAL"
       },
     });
 

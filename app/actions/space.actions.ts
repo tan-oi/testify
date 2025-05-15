@@ -53,6 +53,7 @@ export async function createSpace(data: unknown) {
           askConsent: formData.askConsent,
           textLength: formData.textLength,
           allowShare: formData.allowShare,
+          spaceQuestions : formData.questions,
           ...(formData.videoLength !== null && {
             videoLength: formData.videoLength,
           }),

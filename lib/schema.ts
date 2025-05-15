@@ -1,7 +1,12 @@
 import {z} from "zod"
 
+const questionSchema = z.object({
+  id: z.number().optional(), 
+  text: z.string().min(1, "Question text is required"), 
+});
+
 export const basicDetailsSchema = z.object({
-    name: z.string().min(3),
+    name: z.string().min(3).transform(val => val.trim()),
     headerTitle: z
       .string()
       .min(5, {
@@ -22,6 +27,7 @@ export const basicDetailsSchema = z.object({
     askConsent: z.boolean().default(true),
     allowVideo: z.boolean().default(false),
     allowStarRatings: z.boolean().default(true),
+    questions: z.array(questionSchema).max(3, "You can add a maximum of 3 questions.").min(1,"you need to add one question at the very least")
   });
 
 
@@ -53,6 +59,7 @@ export const basicDetailsSchema = z.object({
     thankYouMessage: z.string().min(1, "Thank you message is required"),
     allowShare: z.boolean().default(false),
     textLength: z.number().int().positive("Text length must be positive"),
+    questions: z.array(questionSchema).max(3, "You can add a maximum of 3 questions.").optional(),
     videoLength: z.number().int().nullable(),
   });
   

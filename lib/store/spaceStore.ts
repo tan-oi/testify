@@ -16,8 +16,8 @@ import { DeleteModalStore } from "../types";
 //   },
 // ];
 
-interface Questions {
-  id: string;
+export interface Questions {
+  id: number;
   text: string;
 }
 

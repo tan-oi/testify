@@ -35,6 +35,7 @@ import { submitTextTestimonial } from "@/app/actions/testimonials.actions";
 import { toast } from "sonner";
 import { TestimonialProps } from "@/lib/types";
 import { Label } from "../ui/label";
+import { Questions } from "@/lib/store/spaceStore";
 export default function TextTestimonial({
   getFormDetails,
 }: TestimonialProps) {
@@ -62,7 +63,7 @@ export default function TextTestimonial({
 
   const { setValue, watch } = form;
   const rating = watch("rating");
-
+  console.log(getFormDetails);
   async function onSubmit(values: z.infer<typeof textSchema>) {
     startTransition(async () => {
       const res = await submitTextTestimonial({
@@ -91,6 +92,9 @@ export default function TextTestimonial({
     })
     }
 
+    const questions = getFormDetails?.spaceQuestions as
+    | Questions[]
+    | undefined;
   return (
     <>
    
@@ -107,9 +111,13 @@ export default function TextTestimonial({
           <div className="flex flex-col gap-1">
             <p>QUESTIONS</p>
             <div>
-              <p>uno</p>
-              <p>duas</p>
-              <p>tres</p>
+              {
+                questions?.map((item,i) => (
+                    <p key={i}>
+                      {item?.text}
+                    </p>
+                ))
+              }
             </div>
           </div>
         </DialogHeader>

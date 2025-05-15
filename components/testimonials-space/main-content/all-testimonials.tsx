@@ -40,6 +40,16 @@ export function AllTestimonials({ spaceSlug }: { spaceSlug: string }) {
     groupedTestimonials.push(merged.slice(i, i + 2));
   }
 
+  if(!groupedTestimonials || groupedTestimonials.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+      <p className="text-gray-500 mb-2">No testimonials yet</p>
+      <p className="text-gray-400 text-sm">Share the link and let them flow in</p>
+    </div>
+    )
+  }
+
+
   return (
     <>
       <div className="flex flex-col space-y-4">
