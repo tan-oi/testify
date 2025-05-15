@@ -30,6 +30,7 @@ export function DeleteModal({ spaceSlug }: { spaceSlug?: string }) {
     useDeleteModal();
   if (!deleteAction) return;
   console.log(metaData);
+  console.log(values);
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -37,7 +38,7 @@ export function DeleteModal({ spaceSlug }: { spaceSlug?: string }) {
       if (result.success) {
         if(metaData?.entityType === "space") {
           queryClient.invalidateQueries({
-            queryKey : ["spaces","overview"]
+            queryKey : ["space","overview"]
           })
         }
         else {

@@ -8,7 +8,7 @@ export async function Navbar() {
   const session = await auth();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b">
+    <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 mx-auto">
         <Link href="/" className="flex items-center hover:cursor-pointer">
           <span className="inline-block text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary/80 to-primary group-hover:bg-white">Testify</span>
