@@ -8,7 +8,6 @@ import { ImportTestimonials } from "./import-testimonials"
 import { toast } from "sonner";
 import { RequestTestimonial } from "./main-content/request-testimonial";
 
-import { useDeleteModal, useSpaceModalStore } from "@/lib/store/spaceStore";
 
 export function TestimonialsList({
   spaceSlug,

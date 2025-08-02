@@ -9,8 +9,14 @@ import {
   EditFontOption,
 } from "./edit-options";
 import { Button } from "../ui/button";
-import { revalidateEmbed } from "@/app/actions/testimonials.actions";
-import { useState } from "react";
+import { createTestimonialEmbed, updateTestimonialEmbed, getTestimonialEmbeds } from "@/app/actions/testimonials.actions";
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Palette, Type, Layout, Square, Copy, Check, Grid, Quote } from "lucide-react";
+import { generateEmbedUrl } from "@/lib/utils";
+import { toast } from "sonner";
+import { useEmbedCache } from "@/lib/store/embedStore";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export function EditSingleTestimonial({
   content,
@@ -21,99 +27,307 @@ export function EditSingleTestimonial({
   senderName,
   videoUrl,
 }: Partial<Testimonials>) {
+  console.log("EditSingleTestimonial component rendered for testimonial:", id);
   const [loading, setLoading] = useState(false);
-  const generateEmbedCode = (testimonialId: string): string => {
-    const { styles } = useStyleStore();
-    console.log(styles, "styles");
+  const [embeds, setEmbeds] = useState<any[]>([]);
+  const [copiedEmbedId, setCopiedEmbedId] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState("classic");
+  const { styles } = useStyleStore();
+  const { getEmbeds, setEmbeds: setCachedEmbeds, clearTestimonialCache } = useEmbedCache();
 
-    const wrapperStyle = styles.wrapper || {};
-    const contentStyle = styles.content || {};
+  // Load existing embeds from cache or API
+  useEffect(() => {
+    if (id) {
+      loadEmbeds();
+    }
+  }, [id]);
 
-    const cleanObject = (obj: Record<string, any>) =>
-      Object.fromEntries(
-        Object.entries(obj)
-          .filter(([, val]) => val !== undefined && val !== null)
-          .map(([key, val]) => [key, String(val)])
-      );
-
-    const wrapper = cleanObject(wrapperStyle);
-    const content = cleanObject(contentStyle);
-
-    const queryParams = new URLSearchParams({
-      wrapper: JSON.stringify(wrapper),
-      content: JSON.stringify(content),
-    });
-
-    const embedUrl = `${
-      process.env.NEXT_PUBLIC_TRUE_HOST
-    }/embeds/testimonial/${testimonialId}?${queryParams.toString()}`;
-
-    return `<iframe src="${embedUrl}" width="100%" height="200" frameborder="0"></iframe>`;
+  const loadEmbeds = async () => {
+    // Check cache first
+    const cachedEmbeds = getEmbeds(id as string);
+    if (cachedEmbeds) {
+      console.log("Loading embeds from cache for testimonial:", id);
+      setEmbeds(cachedEmbeds);
+      return;
+    }
+    
+    // If not in cache, fetch from API only once
+    console.log("Loading embeds from API for testimonial:", id);
+    const result = await getTestimonialEmbeds(id as string);
+    if (result.success) {
+      setEmbeds(result.data);
+      setCachedEmbeds(id as string, result.data);
+    }
   };
 
-  const editEmbed = async (testimonialId: string) => {
+  const saveEmbed = async () => {
     setLoading(true);
     try {
-      await revalidateEmbed(testimonialId);
-    } catch (err) {
-      console.log(err);
+      const result = await createTestimonialEmbed(id as string, styles, selectedTemplate);
+      
+      if (result.success) {
+        toast.success("Embed created successfully!");
+        // Add the new embed to the list and update cache
+        const newEmbeds = [result.data, ...embeds];
+        setEmbeds(newEmbeds);
+        setCachedEmbeds(id as string, newEmbeds);
+      } else {
+        toast.error("Failed to create embed");
+      }
+    } catch (error) {
+      toast.error("Error creating embed");
     } finally {
       setLoading(false);
     }
   };
 
+  const copyEmbedCode = async (embedId: string) => {
+    const embedUrl = generateEmbedUrl(embedId);
+    const iframeCode = `<iframe src="${embedUrl}" width="100%" height="300" frameborder="0"></iframe>`;
+    
+    try {
+      await navigator.clipboard.writeText(iframeCode);
+      setCopiedEmbedId(embedId);
+      toast.success("Embed code copied to clipboard!");
+      
+      // Reset copied state after 2 seconds
+      setTimeout(() => setCopiedEmbedId(null), 2000);
+    } catch (error) {
+      toast.error("Failed to copy embed code");
+    }
+  };
+
+  const copyEmbedUrl = async (embedId: string) => {
+    const embedUrl = generateEmbedUrl(embedId);
+    
+    try {
+      await navigator.clipboard.writeText(embedUrl);
+      setCopiedEmbedId(embedId);
+      toast.success("Embed URL copied to clipboard!");
+      
+      // Reset copied state after 2 seconds
+      setTimeout(() => setCopiedEmbedId(null), 2000);
+    } catch (error) {
+      toast.error("Failed to copy embed URL");
+    }
+  };
+
   return (
-    <div className="py-4">
-      <h2 className="text-center font-bold">
-        Edit Your Testimonial to look exactly like you want
-      </h2>
-
-      <Tabs defaultValue="design">
-        <TabsList className="grid grid-cols-4 gap-4 mb-4">
-          <TabsTrigger value="design" className="mr-4">
-            Design
-          </TabsTrigger>
-          <TabsTrigger value="border">Border</TabsTrigger>
-          <TabsTrigger value="font">Font</TabsTrigger>
-          <TabsTrigger value="background">Background</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="design">
-          <EditDesignOption />
-        </TabsContent>
-
-        <TabsContent value="border">
-          <EditBorderOption />
-        </TabsContent>
-
-        <TabsContent value="background">
-          <EditBackgroundOption />
-        </TabsContent>
-
-        <TabsContent value="font">
-          <EditFontOption />
-        </TabsContent>
-      </Tabs>
-
-      <h3>Live Preview</h3>
-      <EditEmbedPreview
-        content={content as string}
-        senderName={senderName as string}
-      />
-
-      <div className="mt-10">
-        <h3>Embed Code</h3>
-        <textarea
-          readOnly
-          value={generateEmbedCode(id ?? "unknown")}
-          style={{ width: "100%", height: "180px", maxHeight: "300px" }}
-        />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-bold text-foreground">
+          Customize Your Testimonial
+        </h2>
+        <p className="text-muted-foreground">
+          Design your testimonial to match your brand and website style
+        </p>
       </div>
 
-      <div className="flex justify-end items-center pr-2 mt-4">
-        <Button size={"lg"} onClick={() => editEmbed(id as string)}>
-          {loading ? <p>Saving Edit...</p> : <p>Save edit</p>}
-        </Button>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Design Controls */}
+        <div className="space-y-6">
+          {/* Template Selector */}
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Grid className="w-5 h-5" />
+                Template Style
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select template" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="classic">
+                    <div className="flex items-center gap-2">
+                      <Quote className="w-4 h-4" />
+                      Classic Card
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="modern">
+                    <div className="flex items-center gap-2">
+                      <Layout className="w-4 h-4" />
+                      Modern Side-by-Side
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="minimal">
+                    <div className="flex items-center gap-2">
+                      <Square className="w-4 h-4" />
+                      Minimal Quote
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="social">
+                    <div className="flex items-center gap-2">
+                      <Grid className="w-4 h-4" />
+                      Social Media Style
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Palette className="w-5 h-5" />
+                Design Options
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="design" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="design" className="flex items-center gap-2">
+                    <Layout className="w-4 h-4" />
+                    Layout
+                  </TabsTrigger>
+                  <TabsTrigger value="border" className="flex items-center gap-2">
+                    <Square className="w-4 h-4" />
+                    Border
+                  </TabsTrigger>
+                  <TabsTrigger value="font" className="flex items-center gap-2">
+                    <Type className="w-4 h-4" />
+                    Typography
+                  </TabsTrigger>
+                  <TabsTrigger value="background" className="flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Colors
+                  </TabsTrigger>
+                </TabsList>
+
+                <div className="mt-6">
+                  <TabsContent value="design" className="space-y-4">
+                    <EditDesignOption />
+                  </TabsContent>
+
+                  <TabsContent value="border" className="space-y-4">
+                    <EditBorderOption />
+                  </TabsContent>
+
+                  <TabsContent value="background" className="space-y-4">
+                    <EditBackgroundOption />
+                  </TabsContent>
+
+                  <TabsContent value="font" className="space-y-4">
+                    <EditFontOption />
+                  </TabsContent>
+                </div>
+              </Tabs>
+            </CardContent>
+          </Card>
+
+          {/* Save Embed Button */}
+          <Card>
+            <CardContent className="pt-6 space-y-3">
+              <Button 
+                size="lg" 
+                onClick={saveEmbed}
+                disabled={loading}
+                className="w-full"
+              >
+                {loading ? "Creating Embed..." : "Create New Embed"}
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => {
+                  // Clear cache and reload
+                  clearTestimonialCache(id as string);
+                  setEmbeds([]);
+                  loadEmbeds();
+                }}
+                className="w-full"
+              >
+                Refresh Embeds
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Preview Section */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">Live Preview</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                See how your testimonial will look when embedded
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="border rounded-lg overflow-hidden">
+                <EditEmbedPreview
+                  content={content as string}
+                  senderName={senderName as string}
+                  rating={rating as number}
+                  template={selectedTemplate}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Existing Embeds */}
+          {embeds.length > 0 && (
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg">Your Embeds</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Copy and use these embed codes on your website
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {embeds.map((embed) => (
+                  <div key={embed.embedId} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-sm">Embed ID: {embed.embedId}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Created {new Date(embed.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => copyEmbedUrl(embed.embedId)}
+                          className="flex items-center gap-2"
+                        >
+                          {copiedEmbedId === embed.embedId ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                          URL
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => copyEmbedCode(embed.embedId)}
+                          className="flex items-center gap-2"
+                        >
+                          {copiedEmbedId === embed.embedId ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                          Code
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-xs bg-muted p-2 rounded">
+                      <p className="font-medium mb-1">Embed URL:</p>
+                      <p className="text-muted-foreground break-all">
+                        {generateEmbedUrl(embed.embedId)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );

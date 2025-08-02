@@ -94,8 +94,35 @@ model Testimonials {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Embed configurations
+  embeds TestimonialEmbed[]
 
   // @@index([spaceId,type])
+}
+
+model TestimonialEmbed {
+  id String @id @default(cuid())
+  testimonialId String
+  testimonial Testimonials @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  
+  // Embed configuration
+  embedId String @unique // Short unique ID for URLs
+  name String? // Optional name for the embed
+  
+  // Styling configuration (stored as JSON)
+  wrapperStyles Json // Background, padding, etc.
+  contentStyles Json // Text, borders, fonts, etc.
+  
+  // Template type
+  template String @default("classic") // classic, modern, minimal, etc.
+  
+  isActive Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([embedId])
+  @@index([testimonialId])
 }
 model Account {
   userId            String

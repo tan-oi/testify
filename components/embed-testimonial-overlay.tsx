@@ -3,6 +3,8 @@ import { useEmbedStore, useStyleStore } from "@/lib/store/embedStore";
 import {
   Drawer,
   DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
 } from "@/components/ui/drawer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EditSingleTestimonial } from "./embeds/edit-single-testimonial";
@@ -65,11 +67,14 @@ export function EmbedTestimonialOverlay() {
 
   return (
     <Drawer open={open} onOpenChange={handleClose}>
-     <DrawerContent className="max-h-[90vh] mx-6 mb-4 px-4">
-  <div className="overflow-y-auto max-h-[calc(90vh-2rem)] py-4">
-    <EditSingleTestimonial {...passedData} />
-  </div>
-</DrawerContent>
+      <DrawerContent className="max-h-[90vh] mx-6 mb-4 px-4">
+        <DrawerHeader>
+          <DrawerTitle>Testimonial Details</DrawerTitle>
+        </DrawerHeader>
+        <div className="overflow-y-auto max-h-[calc(90vh-2rem)] py-4">
+          <EditSingleTestimonial {...passedData} />
+        </div>
+      </DrawerContent>
     </Drawer>
   );
 }

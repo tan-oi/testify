@@ -7,6 +7,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getTweet } from "react-tweet/api";
+import { generateEmbedId, generateEmbedUrl } from "@/lib/utils";
 
 export async function submitTextTestimonial(
   values: Partial<Testimonials> & {
@@ -233,4 +234,148 @@ export async function importX({
 
 export async function revalidateEmbed(id : string) {
   revalidateTag(`testimonial-${id}`) 
+}
+
+export async function createTestimonialEmbed(testimonialId: string, styles: any, template: string = "classic") {
+  try {
+    // Generate unique embed ID
+    let embedId = generateEmbedId();
+    let attempts = 0;
+    
+    // Ensure uniqueness (retry if collision)
+    while (attempts < 10) {
+      const existing = await prisma.testimonialEmbed.findUnique({
+        where: { embedId }
+      });
+      
+      if (!existing) break;
+      embedId = generateEmbedId();
+      attempts++;
+    }
+
+    const embed = await prisma.testimonialEmbed.create({
+      data: {
+        testimonialId,
+        embedId,
+        wrapperStyles: styles.wrapper || {},
+        contentStyles: styles.content || {},
+        template,
+      }
+    });
+
+    return {
+      success: true,
+      data: {
+        embedId: embed.embedId,
+        embedUrl: generateEmbedUrl(embed.embedId),
+        embed
+      }
+    };
+  } catch (err) {
+    console.error("Error creating embed:", err);
+    return {
+      success: false,
+      message: "Failed to create embed"
+    };
+  }
+}
+
+export async function updateTestimonialEmbed(embedId: string, styles: any, template?: string) {
+  try {
+    const embed = await prisma.testimonialEmbed.update({
+      where: { embedId },
+      data: {
+        wrapperStyles: styles.wrapper || {},
+        contentStyles: styles.content || {},
+        ...(template && { template }),
+        updatedAt: new Date()
+      }
+    });
+
+    return {
+      success: true,
+      data: embed
+    };
+  } catch (err) {
+    console.error("Error updating embed:", err);
+    return {
+      success: false,
+      message: "Failed to update embed"
+    };
+  }
+}
+
+export async function getTestimonialEmbed(embedId: string) {
+  try {
+    const embed = await prisma.testimonialEmbed.findUnique({
+      where: { embedId },
+      include: {
+        testimonial: true
+      }
+    });
+
+    if (!embed || !embed.isActive) {
+      return {
+        success: false,
+        message: "Embed not found or inactive"
+      };
+    }
+
+    return {
+      success: true,
+      data: embed
+    };
+  } catch (err) {
+    console.error("Error fetching embed:", err);
+    return {
+      success: false,
+      message: "Failed to fetch embed"
+    };
+  }
+}
+
+export async function getTestimonialEmbeds(testimonialId: string) {
+  try {
+    const embeds = await prisma.testimonialEmbed.findMany({
+      where: { 
+        testimonialId,
+        isActive: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    return {
+      success: true,
+      data: embeds.map(embed => ({
+        ...embed,
+        embedUrl: generateEmbedUrl(embed.embedId)
+      }))
+    };
+  } catch (err) {
+    console.error("Error fetching embeds:", err);
+    return {
+      success: false,
+      message: "Failed to fetch embeds"
+    };
+  }
+}
+
+export async function deleteTestimonialEmbed(embedId: string) {
+  try {
+    await prisma.testimonialEmbed.update({
+      where: { embedId },
+      data: { isActive: false }
+    });
+
+    return {
+      success: true,
+      message: "Embed deleted successfully"
+    };
+  } catch (err) {
+    console.error("Error deleting embed:", err);
+    return {
+      success: false,
+      message: "Failed to delete embed"
+    };
+  }
 }
