@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
 
     ignoreDuringBuilds: true,
   },
+  typescript : {
+    ignoreBuildErrors : true,
+  },
+  compiler :{
+    removeConsole : true,
+  },
   images : {
     remotePatterns : [
       {

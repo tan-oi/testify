@@ -38,16 +38,16 @@
     return (
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider
+          {/* <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
-          >
+          > */}
             {children}
             {/* <GlobalModal /> */}
             <Toaster richColors />
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
           {process.env.NODE_ENV === "development" && (
             <ReactQueryDevtools initialIsOpen={false} />
           )}

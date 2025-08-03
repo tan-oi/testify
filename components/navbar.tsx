@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import { auth, signOut } from "@/auth";
 import { LogOut } from "lucide-react";
@@ -15,7 +14,7 @@ export async function Navbar() {
         </Link>
 
         <div className="flex items-center space-x-4">
-          <ModeToggle />
+      
 
           {session?.user && session?.user?.id && (
             <form

@@ -14,7 +14,6 @@ export async function GET(
       return new NextResponse("Invalid embed ID", { status: 400 });
     }
 
-    // Get embed configuration from database
     const result = await getTestimonialEmbed(embedId);
     
     if (!result.success) {
@@ -22,17 +21,13 @@ export async function GET(
     }
 
     const { data: embed } = result;
-    const testimonial = embed.testimonial;
+    const testimonial = embed?.testimonial;
 
-    // Extract styles from database
-    const wrapperStyles = embed.wrapperStyles as any;
-    const contentStyles = embed.contentStyles as any;
-
-    console.log("Wrapper styles:", wrapperStyles);
-    console.log("Content styles:", contentStyles);
+    const wrapperStyles = embed?.wrapperStyles as any;
+    const contentStyles = embed?.contentStyles as any;
 
     // Generate HTML based on template
-    const html = generateEmbedHTML(testimonial, wrapperStyles, contentStyles, embed.template || "classic");
+    const html = generateEmbedHTML(testimonial, wrapperStyles, contentStyles, embed?.template || "classic");
 
     return new NextResponse(html, {
       headers: {
@@ -47,8 +42,7 @@ export async function GET(
 }
 
 function generateEmbedHTML(testimonial: any, wrapperStyles: any, contentStyles: any, template: string) {
-  console.log("Generating HTML for template:", template);
-  console.log("Testimonial:", testimonial);
+ 
   
   const containerBackground = wrapperStyles.gradient
     ? wrapperStyles.gradient
@@ -67,7 +61,7 @@ function generateEmbedHTML(testimonial: any, wrapperStyles: any, contentStyles: 
   const wrapperStyle = `
     background: ${containerBackground};
     padding: ${wrapperStyles?.padding || "40px"};
-    min-height: ${wrapperStyles?.minHeight || "280px"};
+    min-height: ${wrapperStyles?.minHeight || "300px"};
     display: flex;
     align-items: center;
     justify-content: center;
