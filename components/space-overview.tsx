@@ -66,6 +66,7 @@ export function SpaceOverview() {
     };
 
     if (cachedData) {
+      console.log(data)
       openModal("edit", data, false);
     } else {
       queryClient
@@ -83,6 +84,7 @@ export function SpaceOverview() {
           
         })
         .then((result) => {
+          console.log(result.data.spaceData.spaceCustomization)
           openModal("edit", result.data.spaceData.spaceCustomization, false);
         });
     }

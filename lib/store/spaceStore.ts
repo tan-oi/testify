@@ -31,7 +31,7 @@ type Space = {
   allowShare: boolean;
   allowStarRatings: boolean;
 
-  questions: Questions[];
+  spaceQuestions: Questions[];
   thankYouHeader: string;
   thankYouMessage: string;
   textLength: number;

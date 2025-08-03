@@ -225,11 +225,11 @@ export function BasicDetails() {
   }, [session, router]);
 
   const { formData, type, updateFormData, nextStep } = useSpaceModalStore();
+  console.log(formData, "comes from formData");
 
-  // <MODIFIED> Use z.infer directly for the useForm type
   const form = useForm<z.infer<typeof basicDetailsSchema>>({
     resolver: zodResolver(basicDetailsSchema),
-    // <MODIFIED> Update defaultValues to initialize the 'questions' array
+ 
     defaultValues: {
       name: formData?.name || "",
       headerDescription: formData?.headerDescription || "",
@@ -238,7 +238,7 @@ export function BasicDetails() {
       askConsent: formData?.askConsent ?? true,
       allowStarRatings: formData?.allowStarRatings ?? true,
      
-      questions: formData?.questions || [],
+      questions: formData?.spaceQuestions || [],
     
     },
   });

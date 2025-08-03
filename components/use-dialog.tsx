@@ -71,9 +71,9 @@
           </DialogHeader>
 
           <div className="flex flex-col md:flex-row">
-            <div className="md:basis-2/5">preview</div>
+            {/* <div className="md:basis-2/5">preview</div> */}
             <div
-              className="md:basis-3/5 flex flex-col items-center px-4 md:gap-4
+              className="w-full flex flex-col items-center px-4 md:gap-4
       "
             >
               <div className="flex w-full">
