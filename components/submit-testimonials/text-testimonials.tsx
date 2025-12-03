@@ -264,11 +264,14 @@ export default function TextTestimonial({
 
 <Dialog open={openThankYou} onOpenChange={setThankYou}>
 <DialogContent>
-  <h3>Thank You!</h3>
+  <DialogTitle>
+
+Thank You!
   <p>Your testimonial has been submitted.</p>
+  </DialogTitle>
 
   <img
-    src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjlmcDZyMXJxNGl2Z2hlcmthNTQ2NWlyYjdsZmYwd2NwaWJ3dmZqeiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/5GoVLqeAOo6PK/giphy.gif"
+    src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzZ1YTRzdXpiMm02OGY0cXgxdzdyeWUydG0yaG95dWFrM2J4cHF3dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26gsjCZpPolPr3sBy/giphy.gif"
     alt="Success GIF"
     className="w-full mx-auto mt-4 rounded-md"
   />

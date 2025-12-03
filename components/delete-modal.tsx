@@ -36,17 +36,23 @@ export function DeleteModal({ spaceSlug }: { spaceSlug?: string }) {
       setLoading(true);
       const result = await deleteAction(values);
       if (result.success) {
-        if(metaData?.entityType === "space") {
+        if (metaData?.entityType === "space") {
           queryClient.invalidateQueries({
-            queryKey : ["space","overview"]
-          })
+            queryKey: ["space", "overview"],
+          });
+
+          toast.success("Space deleted successfully!");
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: [
+              "testimonials",
+              "space",
+              metaData?.type.toLowerCase(),
+              spaceSlug,
+            ],
+          });
+          toast.success("Testimonial deleted successfully!");
         }
-        else {
-        queryClient.invalidateQueries({
-          queryKey: ["testimonials", "space", metaData?.type.toLowerCase(), spaceSlug],
-        });
-      }
-        toast.success("Space deleted successfully!");
       } else toast.error("Something went wrong, please try again!");
     } catch (err) {
       console.log(err);

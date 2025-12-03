@@ -79,7 +79,7 @@ export function Customize() {
       if (type === "edit") {
         const result = await editSpace(finalSpaceDetails);
         if (result?.success) {
-          toast.success(result.message || "Space editted successfully");
+          toast.success(result.message || "Space edtted successfully");
 
           const queryKey = getDetailsQueryKey(result?.slug?.slug ?? "");
 

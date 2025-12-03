@@ -57,7 +57,7 @@ import { thankYouSchema } from "@/lib/schema";
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Enter the text you would want to show after the form is filled
+                    Enter the thank you header
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="thank you" {...field} />
@@ -74,7 +74,7 @@ import { thankYouSchema } from "@/lib/schema";
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Enter the text you would want to show after the form is filled
+                  Enter the thank you description/message
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="thank you" {...field} />

@@ -103,7 +103,7 @@ export function XCard(
   };
 
   return (
-    <Card className="w-full h-full transition-transform duration-300  group">
+    <Card className="w-full h-full transition-transform duration-300 text-white group">
       <div
         className={cn(
             "w-full h-full p-2 rounded-2xl relative isolate overflow-hidden",
@@ -149,11 +149,11 @@ export function XCard(
               <div className="flex justify-between items-start">
                 <div className="flex flex-col min-w-0">
                   <div className="flex items-center gap-1">
-                    <span className="font-semibold text-black dark:text-white/90 hover:underline truncate">
+                    <span className="font-semibold text-white/90 hover:underline truncate">
                       {senderName}
                     </span>
                   </div>
-                  <span className="text-black/70 dark:text-white/60 text-sm truncate">
+                  <span className="text-white/60 text-sm truncate">
                     @{senderEmail}
                   </span>
                 </div>
@@ -174,7 +174,7 @@ export function XCard(
                   <Link
                     href={`https://x.com/${senderEmail}/status/${uniqueImportId}`}
                     target="_blank"
-                    className="h-8 w-8 shrink-0 text-black dark:text-white/80 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg p-1 flex items-center justify-center transition-colors"
+                    className="h-8 w-8 shrink-0 text-white/80 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg p-1 flex items-center justify-center transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +191,7 @@ export function XCard(
           </div>
 
           <div className="mt-3">
-            <p className="text-black dark:text-white/90 text-base whitespace-pre-wrap break-words">
+            <p className="text-white/90 text-base whitespace-pre-wrap break-words">
               {content}
             </p>
           </div>
